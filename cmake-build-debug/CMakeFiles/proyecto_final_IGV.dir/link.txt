@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/proyecto_final_IGV.dir/main.cpp.o  -o proyecto_final_IGV 
