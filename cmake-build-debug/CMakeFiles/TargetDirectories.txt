@@ -1,3 +1,0 @@
-/mnt/c/Users/cojou/CLionProjects/proyecto_final_IGV/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/cojou/CLionProjects/proyecto_final_IGV/cmake-build-debug/CMakeFiles/edit_cache.dir
-/mnt/c/Users/cojou/CLionProjects/proyecto_final_IGV/cmake-build-debug/CMakeFiles/proyecto_final.dir
