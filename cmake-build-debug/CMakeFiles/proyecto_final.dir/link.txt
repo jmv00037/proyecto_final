@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/proyecto_final.dir/main.cpp.o CMakeFiles/proyecto_final.dir/igvInterfaz.cpp.o CMakeFiles/proyecto_final.dir/igvEscena3D.cpp.o CMakeFiles/proyecto_final.dir/igvCamara.cpp.o CMakeFiles/proyecto_final.dir/igvPunto3D.cpp.o CMakeFiles/proyecto_final.dir/utils.cpp.o  -o proyecto_final  -lglut -lGLU -lGL 
