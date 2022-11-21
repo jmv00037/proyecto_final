@@ -21,7 +21,8 @@ igvInterfaz::~igvInterfaz() {}
 // Metodos publicos ----------------------------------------
 
 void igvInterfaz::crear_mundo(void) {
-	interfaz.camara.set(IGV_PARALELA, igvPunto3D(6.0, 4.0, 8), igvPunto3D(0, 0, 0), igvPunto3D(0, 1.0, 0),-1 * 5, 1 * 5, -1 * 5, 1 * 5, -1 * 3, 200);
+    interfaz.camara.set(IGV_PERSPECTIVA, igvPunto3D(25,7,25),igvPunto3D(25,7,24),igvPunto3D(0,1,0),
+                        60.0, 1.0 , 0.2, -1*3);
 }
 
 void igvInterfaz::configura_entorno(int argc, char** argv,
@@ -63,19 +64,19 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
 		////// Apartado C: incluir aqu� el cambio de la c�mara para mostrar las vistas planta, perfil, alzado o perspectiva 
 		////// Apartado C: incluir aqu� la modificaci�n de los grados de libertad del modelo pulsando las teclas correspondientes
         case 'a':
-            interfaz.camara.onKeyBoard(key);
+            interfaz.camara.onKeyBoard(key,interfaz.dt);
             interfaz.camara.aplicar();
             break;
         case 'd':
-            interfaz.camara.onKeyBoard(key);
+            interfaz.camara.onKeyBoard(key,interfaz.dt);
             interfaz.camara.aplicar();
             break;
         case 'w':
-            interfaz.camara.onKeyBoard(key);
+            interfaz.camara.onKeyBoard(key,interfaz.dt);
             interfaz.camara.aplicar();
             break;
         case 's':
-            interfaz.camara.onKeyBoard(key);
+            interfaz.camara.onKeyBoard(key,interfaz.dt);
             interfaz.camara.aplicar();
             break;
         case 'e': // activa/desactiva la visualizacion de los ejes
@@ -147,6 +148,16 @@ void igvInterfaz::inicializa_callbacks() {
 	glutReshapeFunc(set_glutReshapeFunc);
 	glutDisplayFunc(set_glutDisplayFunc);
 	glutIdleFunc(set_glutIdleFunc);
+    glutTimerFunc(1000/60,set_timer,0);
+}
+
+void igvInterfaz::set_timer(int)
+{
+    int t = glutGet(GLUT_ELAPSED_TIME);
+    interfaz.dt = (t - interfaz.tUltimoFotograma) / 1000.0;
+    interfaz.tUltimoFotograma = t;
+    glutPostRedisplay();
+    glutTimerFunc(1000 / 60, set_timer, 0);
 }
 
 

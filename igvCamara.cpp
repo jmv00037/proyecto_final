@@ -8,17 +8,18 @@
 // Metodos constructores
 
 igvCamara::igvCamara() {
-    m_pos = igvPunto3D(0.0f, 0.0f, 0.0f);
-    m_target = igvPunto3D(0.0f, 0.0f, 1.0f);
-    m_up = igvPunto3D(0.0f, 1.0f, 0.0f);
+    P0 = igvPunto3D(0.0f, 0.0f, 0.0f);
+    r = igvPunto3D(0.0f, 0.0f, 1.0f);
+    v = igvPunto3D(0.0f, 1.0f, 3.0f);
+    tipo = IGV_PERSPECTIVA;
 }
 
 igvCamara::~igvCamara() {}
 
 igvCamara::igvCamara(tipoCamara _tipo, igvPunto3D _P0, igvPunto3D _r, igvPunto3D _V) {
-    m_pos = _P0;
-    m_target = _r;
-    m_up = _V;
+    P0 = _P0;
+    r = _r;
+    v = _V;
 
 	tipo = _tipo;
 }
@@ -26,17 +27,17 @@ igvCamara::igvCamara(tipoCamara _tipo, igvPunto3D _P0, igvPunto3D _r, igvPunto3D
 
 // Metodos publicos 
 void igvCamara::set(igvPunto3D _P0, igvPunto3D _r, igvPunto3D _V) {
-    m_pos = _P0;
-    m_target = _r;
-    m_up = _V;
+    P0 = _P0;
+    r = _r;
+    v = _V;
 }
 void igvCamara::set(tipoCamara _tipo, igvPunto3D _P0, igvPunto3D _r, igvPunto3D _V,
 	double _xwmin, double _xwmax, double _ywmin, double _ywmax, double _znear, double _zfar) {
 	tipo = _tipo;
 
-    m_pos = _P0;
-    m_target = _r;
-    m_up = _V;
+    P0 = _P0;
+    r = _r;
+    v = _V;
 
 	xwmin = _xwmin;
 	xwmax = _xwmax;
@@ -50,9 +51,9 @@ void igvCamara::set(tipoCamara _tipo, igvPunto3D _P0, igvPunto3D _r, igvPunto3D 
 	double _angulo, double _raspecto, double _znear, double _zfar) {
 	tipo = _tipo;
 
-    m_pos = _P0;
-    m_target = _r;
-    m_up = _V;
+    P0 = _P0;
+    r = _r;
+    v = _V;
 
 	angulo = _angulo;
 	raspecto = _raspecto;
@@ -76,40 +77,44 @@ void igvCamara::aplicar(void) {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(m_pos[X], m_pos[Y], m_pos[Z], m_target[X], m_target[Y], m_target[Z], m_up[X], m_up[Y], m_up[Z]);
+	gluLookAt(P0[X], P0[Y], P0[Z], r[X], r[Y], r[Z], v[X], v[Y], v[Z]);
 }
 
 void igvCamara::setPosition(float x, float y, float z) {
-    m_pos.set(x,y,z);
+    P0.set(x, y, z);
 }
 
-void igvCamara::onKeyBoard(unsigned char key) {
+void igvCamara::onKeyBoard(unsigned char key, double dt) {
     switch (key) {
         case 'w':
             {
-            igvPunto3D dir;
-            dir = m_target - m_pos;
-            dir.normalizar();
-            m_pos += dir *= m_speed ;
-            m_target += dir *= m_speed;
+                igvPunto3D dir;
+                dir = r - P0;
+                dir.normalizar();
+                P0 += dir * (m_speed * dt);
+                r += dir * (m_speed * dt);
             break;
             }
-        case 's':
-            m_pos -= (m_target * m_up);
+        case 's':{
+            igvPunto3D dir;
+            dir = r - P0;
+            dir.normalizar();
+            P0 -= dir * (m_speed * dt);
+            r -= dir * (m_speed * dt);
             break;
+            }
         case 'a': {
-            igvPunto3D izq = m_target.cross(m_up);
-            izq.normalizar();
-            izq *= m_speed;
-            m_pos += izq;
+            igvPunto3D dir = v.cross((r - P0));
+            dir.normalizar();
+            P0 += dir * (m_speed * dt);
+            r += dir * (m_speed * dt);
             break;
             }
         case 'd': {
-            igvPunto3D der = m_up.cross(m_target);
-            der.normalizar();
-            der *= m_speed;
-            m_pos += der;
-            break;
+            igvPunto3D dir = (r - P0).cross(v);
+            dir.normalizar();
+            P0 += dir * (m_speed * dt);
+            r += dir * (m_speed * dt);
             }
         case '+':
             m_speed += 0.1;

@@ -54,7 +54,7 @@ public:
     igvPunto3D& operator+(const igvPunto3D& p);
     igvPunto3D& operator-(const igvPunto3D& p);
     igvPunto3D& operator-=(const igvPunto3D& p);
-    igvPunto3D& operator*(const igvPunto3D& p);
+    igvPunto3D& operator*(const double& n);
     igvPunto3D& operator+=(const igvPunto3D& p);
     igvPunto3D& operator*=(float f);
     igvPunto3D cross(const igvPunto3D& v) const;

@@ -41,16 +41,16 @@ public:
 	GLdouble znear, zfar;
 
 	// punto de visi�n	
-	igvPunto3D m_pos;
+	igvPunto3D P0;
 
 	// punto de referencia de visi�n	
-	igvPunto3D m_target;
+	igvPunto3D r;
 
 	// vector arriba	
-	igvPunto3D m_up;
+	igvPunto3D v;
 
     //VELOCIDAD MOVIMIENTO
-    float m_speed = 1.0f;
+    float m_speed = 17;
 	// Metodos
 
 public:
@@ -78,8 +78,7 @@ public:
 
 	void zoom(double factor); // realiza un zoom sobre la c�mara
     void setPosition(float x, float y, float z);
-    void onKeyBoard(unsigned char key);
-
+    void onKeyBoard(unsigned char key, double dt);
 
 
     /*

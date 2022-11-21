@@ -31,6 +31,10 @@ protected:
     float deltaX=1,angCabeza=0,angPierna=0,angBrazos=0;
     bool animacion=false,cambiarCabeza=false,cambiarPiernas=false,cambiarBrazos=false;
 
+    ///PRUEBA
+    double dt;
+    double tUltimoFotograma;
+
 public:
 	// Constructores por defecto y destructor
 	igvInterfaz();
@@ -64,6 +68,7 @@ public:
 	void set_ancho_ventana(int _ancho_ventana) { ancho_ventana = _ancho_ventana; };
 	void set_alto_ventana(int _alto_ventana) { alto_ventana = _alto_ventana; };
 
+    static void set_timer(int);
 };
 
 #endif

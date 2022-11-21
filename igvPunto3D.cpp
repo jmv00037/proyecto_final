@@ -83,21 +83,16 @@ igvPunto3D &igvPunto3D::operator*=(float f) {
     return *this;
 }
 
-igvPunto3D &igvPunto3D::operator*(const igvPunto3D &p) {
-    igvPunto3D r;
-
-    r[X] = this->c[X] * p[X];
-    r[Y] = this->c[Y] * p[Y];
-    r[Z] = this->c[Z] * p[Z];
-
-    return r;
+igvPunto3D &igvPunto3D::operator*(const double &n) {
+    igvPunto3D* res = new igvPunto3D(c[X] * n, c[Y] * n, c[Z] * n);
+    return *res;
 }
 
 igvPunto3D igvPunto3D::cross(const igvPunto3D& v) const
 {
-    const float _x = this->c[Y] * v[Z] - this->c[Z] * v[Y];
-    const float _y = this->c[Z] * v[X] - this->c[X] * v[Z];
-    const float _z = this->c[X] * v[Y] - this->c[Y] * v[X];
+    double _x = this->c[Y] * v[Z] - this->c[Z] * v[Y];
+    double _y = this->c[Z] * v[X] - this->c[X] * v[Z];
+    double _z = this->c[X] * v[Y] - this->c[Y] * v[X];
 
     return igvPunto3D(_x, _y, _z);
 }
