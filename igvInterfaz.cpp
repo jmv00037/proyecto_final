@@ -64,17 +64,8 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
 		////// Apartado C: incluir aqu� el cambio de la c�mara para mostrar las vistas planta, perfil, alzado o perspectiva 
 		////// Apartado C: incluir aqu� la modificaci�n de los grados de libertad del modelo pulsando las teclas correspondientes
         case 'a':
-            interfaz.camara.onKeyBoard(key,interfaz.dt);
-            interfaz.camara.aplicar();
-            break;
         case 'd':
-            interfaz.camara.onKeyBoard(key,interfaz.dt);
-            interfaz.camara.aplicar();
-            break;
         case 'w':
-            interfaz.camara.onKeyBoard(key,interfaz.dt);
-            interfaz.camara.aplicar();
-            break;
         case 's':
             interfaz.camara.onKeyBoard(key,interfaz.dt);
             interfaz.camara.aplicar();
