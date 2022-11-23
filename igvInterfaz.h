@@ -24,6 +24,7 @@ protected:
 
 	igvEscena3D escena; // escena que se visualiza en la ventana definida por igvInterfaz
 	igvCamara camara; // c�mara que se utiliza para visualizar la escena
+    igvCamara* actual = nullptr;
 
     //movimientos con teclas
     float incrementoMov=5,hombroDer=0,hombroIzq=0,cabeza=0,torso=0,piernaDer=0,piernaIzq=0;
@@ -42,6 +43,7 @@ public:
 
 	// Metodos est�ticos
 	// callbacks de eventos
+    static void passiveMouseCB(int x, int  y); //Raton
 	static void set_glutKeyboardFunc(unsigned char key, int x, int y); // metodo para control de eventos del teclado
 	static void set_glutReshapeFunc(int w, int h); // metodo que define la camara de vision y el viewport
 												   // se llama autom�ticamente cuano se camba el tama�o de la ventana

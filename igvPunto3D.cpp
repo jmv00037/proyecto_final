@@ -2,6 +2,8 @@
 #include <math.h>
 
 #include "igvPunto3D.h"
+#include "utils.h"
+
 
 // Constructores
 igvPunto3D::igvPunto3D() {
@@ -102,4 +104,15 @@ void igvPunto3D::normalizar() {
     c[X] /= mod;
     c[Y] /= mod;
     c[Z] /= mod;
+}
+
+void igvPunto3D::Rotate(float Angle, const igvPunto3D &Axis) {
+    utils::Quaternion RotationQ(Angle, Axis);
+
+    utils::Quaternion ConjugateQ = RotationQ.Conjugate();
+    utils::Quaternion W = RotationQ * (*this) * ConjugateQ;
+
+    c[X] = W.x;
+    c[Y] = W.y;
+    c[Z] = W.z;
 }

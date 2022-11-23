@@ -2,7 +2,6 @@
 
 #include <cstdlib>
 #include "igvInterfaz.h"
-#include "math.h"
 
 using namespace std;
 
@@ -21,8 +20,8 @@ igvInterfaz::~igvInterfaz() {}
 // Metodos publicos ----------------------------------------
 
 void igvInterfaz::crear_mundo(void) {
-    interfaz.camara.set(IGV_PERSPECTIVA, igvPunto3D(25,7,25),igvPunto3D(25,7,24),igvPunto3D(0,1,0),
-                        60.0, 1.0 , 0.2, -1*3);
+    interfaz.camara = igvCamara(alto_ventana,ancho_ventana,igvPunto3D(0,0,0),igvPunto3D(0,0,1),igvPunto3D(0,1,0));
+    interfaz.camara.set(IGV_PERSPECTIVA, igvPunto3D(25,7,25),igvPunto3D(25,7,24),igvPunto3D(0,1,0),60.0, 1.0 , 0.2, -1*3);
 }
 
 void igvInterfaz::configura_entorno(int argc, char** argv,
@@ -38,7 +37,14 @@ void igvInterfaz::configura_entorno(int argc, char** argv,
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(_ancho_ventana, _alto_ventana);
 	glutInitWindowPosition(_pos_X, _pos_Y);
-	glutCreateWindow(_titulo.c_str());
+	//glutCreateWindow(_titulo.c_str());
+
+    char game_mode_string[64];
+    snprintf(game_mode_string, sizeof(game_mode_string), "%dx%d@60", ancho_ventana, alto_ventana);
+    glutGameModeString(game_mode_string);
+    glutEnterGameMode();
+
+    glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR);
 
 	glEnable(GL_DEPTH_TEST); // activa el ocultamiento de superficies por z-buffer
 	glClearColor(1.0, 1.0, 1.0, 0.0); // establece el color de fondo de la ventana
@@ -72,6 +78,10 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
             break;
         case 'e': // activa/desactiva la visualizacion de los ejes
             interfaz.escena.set_ejes(interfaz.escena.get_ejes() ? false : true);
+            glutWarpPointer(interfaz.ancho_ventana/2,interfaz.alto_ventana/2);
+            break;
+        case 'z':
+            glutWarpPointer(interfaz.ancho_ventana/2,interfaz.alto_ventana/2);
             break;
         case 27: // tecla de escape para SALIR
             exit(1);
@@ -134,7 +144,26 @@ void igvInterfaz::set_glutIdleFunc() {
     }
 }
 
+void igvInterfaz::passiveMouseCB(int x, int y) {
+    /*
+    glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
+    double nuevox = (x - (interfaz.ancho_ventana / 2)) * interfaz.dt;
+    double nuevoy = ((interfaz.alto_ventana / 2) - y) * interfaz.dt;
+    interfaz.camara.onMouse(x,y);
+    interfaz.camara.aplicar();
+    */
+
+    //glutWarpPointer(interfaz.ancho_ventana / 2, interfaz.alto_ventana / 2);
+    double nuevox = (x - (interfaz.ancho_ventana / 2)) * interfaz.dt;
+    double nuevoy = ((interfaz.alto_ventana / 2) - y) * interfaz.dt;
+    interfaz.camara.mirar(nuevox, nuevoy);
+    interfaz.camara.aplicar();
+
+    glutPostRedisplay();
+}
+
 void igvInterfaz::inicializa_callbacks() {
+    glutPassiveMotionFunc(passiveMouseCB);
 	glutKeyboardFunc(set_glutKeyboardFunc);
 	glutReshapeFunc(set_glutReshapeFunc);
 	glutDisplayFunc(set_glutDisplayFunc);

@@ -59,6 +59,7 @@ public:
     igvPunto3D& operator*=(float f);
     igvPunto3D cross(const igvPunto3D& v) const;
     void normalizar();
+    void Rotate(float Angle, const igvPunto3D& Axis);
 
 	void set(const double& x, const double& y, const double& z);
 };

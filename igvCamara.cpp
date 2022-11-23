@@ -3,15 +3,27 @@
 #include <stdio.h>
 
 #include "igvCamara.h"
-#include "utils.h"
+
+static int MARGIN = 10;
 
 // Metodos constructores
 
-igvCamara::igvCamara() {
-    P0 = igvPunto3D(0.0f, 0.0f, 0.0f);
-    r = igvPunto3D(0.0f, 0.0f, 1.0f);
-    v = igvPunto3D(0.0f, 1.0f, 3.0f);
+igvCamara::igvCamara(int windowWith, int windowHeigh, igvPunto3D _P0, igvPunto3D _r, igvPunto3D _V): m_window_Width(windowWith), m_window_Height(windowHeigh) {
+    P0 = _P0;
+    r = _r;
+    r.normalizar();
+    v = _V;
+    v.normalizar();
+
+
+
+    angulo = 60.0;
+    raspecto = 1.0;
+    znear = 0.2;
+    zfar = -1*3;
+
     tipo = IGV_PERSPECTIVA;
+    init();
 }
 
 igvCamara::~igvCamara() {}
@@ -124,4 +136,98 @@ void igvCamara::onKeyBoard(unsigned char key, double dt) {
             if(m_speed < 0.1f) m_speed = 0.1f;
             break;
     }
+}
+
+void igvCamara::onMouse(int x, int y) {
+
+    int deltaX = x - m_mousePos.x;
+    int deltaY = y - m_mousePos.y;
+
+    m_mousePos.x = x;
+    m_mousePos.y = y;
+
+    float camVert = deltaY*1.5;
+
+    if (camVert > 90)
+        camVert = 90;
+    else if (camVert < -90)
+        camVert = -90;
+
+    float camHor = deltaX*0.5;
+
+    float rads = (camHor+deltaX)*M_PI / 180;
+    P0[X] -= sin(rads)*deltaY;
+    P0[Z] -= cos(rads)*deltaY;
+
+    //m_angle_H += (float)deltaX / 20.0f;
+    //m_angle_V += (float)deltaY / 50.0f;
+/*
+    update();
+*/
+}
+
+void igvCamara::init() {
+    igvPunto3D HTarget(r.c[X], 0.0, r.c[Z]);
+    HTarget.normalizar();
+
+    float angle = ToDegree(asin(abs(HTarget.c[Z])));
+
+    if(HTarget.c[Z] >= 0.0f){
+        if(HTarget.c[X] >= 0.0f)
+            m_angle_H = 360.0f - angle;
+        else
+            m_angle_H = 180.0f - angle;
+    }else{
+        if(HTarget.c[X] >= 0.0f)
+            m_angle_H = angle;
+        else
+            m_angle_H = 180.0f - angle;
+    }
+
+    m_angle_V = -ToDegree(asin(r.c[Y]));
+
+    m_mousePos.x = m_window_Height/2;
+    m_mousePos.y = m_window_Width/2;
+
+}
+
+void igvCamara::update() {
+    igvPunto3D Yaxis(0.0f, 1.0f, 0.0f);
+
+    igvPunto3D View(1.0f, 0.0f, 0.0f);
+    View.Rotate(m_angle_H, Yaxis);
+    View.normalizar();
+
+    igvPunto3D U = Yaxis.cross(View);
+    U.normalizar();
+    View.Rotate(m_angle_V, U);
+
+    r = View;
+    r.normalizar();
+
+    v = r.cross(U);
+    v.normalizar();
+
+}
+
+
+void igvCamara::mirar(double incAlfa, double incBeta)
+{
+    beta += incBeta * 0.1;
+    alfa += incAlfa * 0.1;
+    if (beta > 89.0) {
+        beta = 89.0;
+    }
+    else if (beta < -89.0) {
+        beta = -89.0;
+    }
+    double dist = sqrt((pow(r[X]-P0[X],2)  + pow(r[Z] - P0[Z], 2)));
+    double alfaRad = alfa * M_PI / 180;
+    double betaRad = beta * M_PI / 180;
+    double rxz = dist * cos(betaRad);
+
+    r[X] = P0[X] + sin(alfaRad) * rxz;
+    //r[Y] = P0[Y] + sin(betaRad) * dist;
+    r[Z] = P0[Z] - cos(alfaRad) * rxz;
+
 }

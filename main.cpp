@@ -9,10 +9,13 @@ igvInterfaz interfaz;
 int main(int argc, char** argv) {
 	// inicializa la ventana de visualizaci�n
 	interfaz.configura_entorno(argc, argv,
-		500, 500, // tama�o de la ventana
+		800, 600, // tama�o de la ventana
 		100, 100, // posicion de la ventana
 		"Informatica Grafica y Visualizacion. Practica 3B." // titulo de la ventana
 	);
+
+
+
 
 	// establece las funciones callbacks para la gesti�n de los eventos
 	interfaz.inicializa_callbacks();

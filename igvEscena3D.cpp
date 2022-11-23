@@ -9,7 +9,7 @@ igvEscena3D::igvEscena3D() {
 	ejes = true;
     movimientoCabeza=0; movimientoHombroDer=0,movimientoHombroIzq=0;
     //Se cargan del fichero los objetos y se guardan
-    system("ls ../modelos");
+
     std::string ruta = "../modelos/";
     std::string pCabeza = ruta + "cabeza.obj";
     std::string pTorso = ruta +"torso.obj";

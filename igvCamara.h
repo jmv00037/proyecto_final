@@ -10,6 +10,8 @@
 #endif
 
 #include "igvPunto3D.h"
+#include "utils.h"
+
 typedef enum {
 	panoramica,
 	planta,
@@ -26,7 +28,8 @@ typedef enum {
 class igvCamara {
 
 public:
-	// atributos
+
+// atributos
 	poscam vis;		// Posici�n de la c�mara
 
 	tipoCamara tipo;	// paralela o perspectiva
@@ -51,15 +54,23 @@ public:
 
     //VELOCIDAD MOVIMIENTO
     float m_speed = 17;
+
+    //ROTACION CAMARA
+    double alfa = 0;
+    double beta = 0;
+    int m_window_Width, m_window_Height;
+    float m_angle_H, m_angle_V;
+    utils::Vector2i m_mousePos;
 	// Metodos
 
 public:
 	// Constructores por defecto y destructor
-	igvCamara();
+    igvCamara()=default;
 	~igvCamara();
 
 	// Otros constructores
 	igvCamara(tipoCamara _tipo, igvPunto3D _P0, igvPunto3D _r, igvPunto3D _V);
+    igvCamara(int windowWith, int windowHeigh, igvPunto3D _P0, igvPunto3D _r, igvPunto3D _V);
 
 	// Metodos
 	// define la posici�n de la c�mara
@@ -79,7 +90,10 @@ public:
 	void zoom(double factor); // realiza un zoom sobre la c�mara
     void setPosition(float x, float y, float z);
     void onKeyBoard(unsigned char key, double dt);
-
+    void onMouse(int x, int y);
+    void init();
+    void update();
+    void mirar(double incAlfa, double incBeta);
 
     /*
 	void set_vista(tipoCamara t) { tipo = t; };
