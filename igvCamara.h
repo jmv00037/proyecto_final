@@ -60,7 +60,6 @@ public:
     double beta = 0;
     int m_window_Width, m_window_Height;
     float m_angle_H, m_angle_V;
-    utils::Vector2i m_mousePos;
 	// Metodos
 
 public:
@@ -90,9 +89,6 @@ public:
 	void zoom(double factor); // realiza un zoom sobre la c�mara
     void setPosition(float x, float y, float z);
     void onKeyBoard(unsigned char key, double dt);
-    void onMouse(int x, int y);
-    void init();
-    void update();
     void mirar(double incAlfa, double incBeta);
 
     /*

@@ -11,37 +11,7 @@
 #include "cmath"
 #include "string"
 
-#define ToRadian(x) (float)(((x) * M_PI / 180.0f))
-#define ToDegree(x) (float)(((x) * 180.0f / M_PI))
-
 namespace utils{
-    //CLASES UTILES
-    struct Vector2i
-    {
-        int x;
-        int y;
-    };
-
-    struct Quaternion
-    {
-        float x, y, z, w;
-
-        Quaternion(float Angle, const igvPunto3D& V);
-
-        Quaternion(float _x, float _y, float _z, float _w);
-
-        void Normalize();
-
-        Quaternion Conjugate() const;
-
-        igvPunto3D   ToDegrees();
-
-        Quaternion operator*( const Quaternion& r);
-
-        Quaternion operator*( const igvPunto3D& v);
-
-    };
-
 
     //FUNCIONES UTILES
     /**

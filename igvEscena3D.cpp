@@ -10,7 +10,8 @@ igvEscena3D::igvEscena3D() {
     movimientoCabeza=0; movimientoHombroDer=0,movimientoHombroIzq=0;
     //Se cargan del fichero los objetos y se guardan
 
-    std::string ruta = "../modelos/";
+
+    std::string ruta = "..\\modelos\\";
     std::string pCabeza = ruta + "cabeza.obj";
     std::string pTorso = ruta +"torso.obj";
     std::string pBrazoIzq = ruta +"brazoIzq.obj";
@@ -30,7 +31,7 @@ igvEscena3D::igvEscena3D() {
        utils::cargaOBJ(&pHombroIzq[0],hombroIzq.vertices,hombroIzq.texturas,hombroIzq.normales,hombroIzq.triangulos) &&
        utils::cargaOBJ(&pHombroDer[0],hombroDer.vertices,hombroDer.texturas,hombroDer.normales,hombroDer.triangulos) &&
        utils::cargaOBJ(&pPiernaSupIzq[0],piernaSupIzq.vertices,piernaSupIzq.texturas,piernaSupIzq.normales,piernaSupIzq.triangulos) &&
-       utils::cargaOBJ(&pPiernaSupDer[0],piernaSupDer.vertices,piernaSupDer.texturas,piernaSupDer.normales,piernaSupIzq.triangulos))
+       utils::cargaOBJ(&pPiernaSupDer[0],piernaSupDer.vertices,piernaSupDer.texturas,piernaSupDer.normales,piernaSupDer.triangulos))
         cargadoCorrectamente = true;
     else
         cargadoCorrectamente = false;

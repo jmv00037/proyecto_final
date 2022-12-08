@@ -1,10 +1,10 @@
-
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdio.h>
 
 #include "igvCamara.h"
 
-static int MARGIN = 10;
+
 
 // Metodos constructores
 
@@ -23,7 +23,6 @@ igvCamara::igvCamara(int windowWith, int windowHeigh, igvPunto3D _P0, igvPunto3D
     zfar = -1*3;
 
     tipo = IGV_PERSPECTIVA;
-    init();
 }
 
 igvCamara::~igvCamara() {}
@@ -137,79 +136,6 @@ void igvCamara::onKeyBoard(unsigned char key, double dt) {
             break;
     }
 }
-
-void igvCamara::onMouse(int x, int y) {
-
-    int deltaX = x - m_mousePos.x;
-    int deltaY = y - m_mousePos.y;
-
-    m_mousePos.x = x;
-    m_mousePos.y = y;
-
-    float camVert = deltaY*1.5;
-
-    if (camVert > 90)
-        camVert = 90;
-    else if (camVert < -90)
-        camVert = -90;
-
-    float camHor = deltaX*0.5;
-
-    float rads = (camHor+deltaX)*M_PI / 180;
-    P0[X] -= sin(rads)*deltaY;
-    P0[Z] -= cos(rads)*deltaY;
-
-    //m_angle_H += (float)deltaX / 20.0f;
-    //m_angle_V += (float)deltaY / 50.0f;
-/*
-    update();
-*/
-}
-
-void igvCamara::init() {
-    igvPunto3D HTarget(r.c[X], 0.0, r.c[Z]);
-    HTarget.normalizar();
-
-    float angle = ToDegree(asin(abs(HTarget.c[Z])));
-
-    if(HTarget.c[Z] >= 0.0f){
-        if(HTarget.c[X] >= 0.0f)
-            m_angle_H = 360.0f - angle;
-        else
-            m_angle_H = 180.0f - angle;
-    }else{
-        if(HTarget.c[X] >= 0.0f)
-            m_angle_H = angle;
-        else
-            m_angle_H = 180.0f - angle;
-    }
-
-    m_angle_V = -ToDegree(asin(r.c[Y]));
-
-    m_mousePos.x = m_window_Height/2;
-    m_mousePos.y = m_window_Width/2;
-
-}
-
-void igvCamara::update() {
-    igvPunto3D Yaxis(0.0f, 1.0f, 0.0f);
-
-    igvPunto3D View(1.0f, 0.0f, 0.0f);
-    View.Rotate(m_angle_H, Yaxis);
-    View.normalizar();
-
-    igvPunto3D U = Yaxis.cross(View);
-    U.normalizar();
-    View.Rotate(m_angle_V, U);
-
-    r = View;
-    r.normalizar();
-
-    v = r.cross(U);
-    v.normalizar();
-
-}
-
 
 void igvCamara::mirar(double incAlfa, double incBeta)
 {

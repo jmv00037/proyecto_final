@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstring>
 #include "utils.h"
-
+#pragma warning(disable:4996)
 
 
 using namespace utils;
@@ -59,42 +59,3 @@ bool utils::cargaOBJ(const char* path,std::vector<float> &vertices, std::vector<
     fclose(file);
     return true;
 }
-
-Quaternion::Quaternion(float Angle, const igvPunto3D &V) {
-    float HalfAngleInRadians = ToRadian(Angle/2);
-
-    float SineHalfAngle = sinf(HalfAngleInRadians);
-    float CosHalfAngle = cosf(HalfAngleInRadians);
-
-    x = V.c[X] * SineHalfAngle;
-    y = V.c[Y] * SineHalfAngle;
-    z = V.c[Z] * SineHalfAngle;
-    w = CosHalfAngle;
-}
-
-Quaternion Quaternion::Conjugate() const {
-    Quaternion ret(-x, -y, -z, w);
-    return ret;
-}
-
-Quaternion::Quaternion(float _x, float _y, float _z, float _w): x(_x), y(_y), z(_z), w(_w) {
-}
-
-Quaternion Quaternion::operator*(const Quaternion &r) {
-    float w = (w * r.w) - (x * r.x) - (y * r.y) - (z * r.z);
-    float x = (x * r.w) + (w * r.x) + (y * r.z) - (z * r.y);
-    float y = (y * r.w) + (w * r.y) + (z * r.x) - (x * r.z);
-    float z = (z * r.w) + (w * r.z) + (x * r.y) - (y * r.x);
-
-    return Quaternion(x, y, z, w);
-}
-
-Quaternion Quaternion::operator*(const igvPunto3D &v) {
-    float w = - (x * v.c[X]) - (y * v.c[Y]) - (z * v.c[Z]);
-    float x =   (w * v.c[X]) + (y * v.c[Z]) - (z * v.c[Y]);
-    float y =   (w * v.c[Y]) + (z * v.c[X]) - (x * v.c[Z]);
-    float z =   (w * v.c[Z]) + (x * v.c[Y]) - (y * v.c[X]);
-
-    return Quaternion(x, y, z, w);
-}
-

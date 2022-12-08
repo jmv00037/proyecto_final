@@ -1,6 +1,7 @@
 #include <cstdlib>
 
 #include "igvInterfaz.h"
+#include <GL\freeglut.h>
 
 // Objetos globales
 // objeto que contiene la configuraci�n y la interacci�n con la ventana de visualizaci�n
@@ -9,7 +10,7 @@ igvInterfaz interfaz;
 int main(int argc, char** argv) {
 	// inicializa la ventana de visualizaci�n
 	interfaz.configura_entorno(argc, argv,
-		800, 600, // tama�o de la ventana
+		1920, 1080, // tama�o de la ventana
 		100, 100, // posicion de la ventana
 		"Informatica Grafica y Visualizacion. Practica 3B." // titulo de la ventana
 	);
