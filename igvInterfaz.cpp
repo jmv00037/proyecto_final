@@ -1,4 +1,5 @@
 
+#define FPS 60
 
 #include <cstdlib>
 #include "igvInterfaz.h"
@@ -78,10 +79,6 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
             break;
         case 'e': // activa/desactiva la visualizacion de los ejes
             interfaz.escena.set_ejes(interfaz.escena.get_ejes() ? false : true);
-            glutWarpPointer(interfaz.ancho_ventana/2,interfaz.alto_ventana/2);
-            break;
-        case 'z':
-            glutWarpPointer(interfaz.ancho_ventana/2,interfaz.alto_ventana/2);
             break;
         case 27: // tecla de escape para SALIR
             exit(1);
@@ -145,18 +142,12 @@ void igvInterfaz::set_glutIdleFunc() {
 }
 
 void igvInterfaz::passiveMouseCB(int x, int y) {
-    /*
-    glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
-    double nuevox = (x - (interfaz.ancho_ventana / 2)) * interfaz.dt;
-    double nuevoy = ((interfaz.alto_ventana / 2) - y) * interfaz.dt;
-    interfaz.camara.onMouse(x,y);
-    interfaz.camara.aplicar();
-    */
-
-    //glutWarpPointer(interfaz.ancho_ventana / 2, interfaz.alto_ventana / 2);
-    double nuevox = (x - (interfaz.ancho_ventana / 2)) * interfaz.dt;
-    double nuevoy = ((interfaz.alto_ventana / 2) - y) * interfaz.dt;
-    interfaz.camara.mirar(nuevox, nuevoy);
+    
+    double nuevox = (x - (interfaz.ancho_ventana / 2)) ;
+    double nuevoy = ((interfaz.alto_ventana / 2) - y) ;
+    
+    interfaz.camara.mirar(nuevox, nuevoy,interfaz.dt);
+    
     interfaz.camara.aplicar();
 
     glutPostRedisplay();
@@ -168,16 +159,17 @@ void igvInterfaz::inicializa_callbacks() {
 	glutReshapeFunc(set_glutReshapeFunc);
 	glutDisplayFunc(set_glutDisplayFunc);
 	glutIdleFunc(set_glutIdleFunc);
-    glutTimerFunc(1000/60,set_timer,0);
+    glutTimerFunc(1000/FPS,loop,0);//espera un numero de milisegundos para que vaya fluido
 }
 
-void igvInterfaz::set_timer(int)
+void igvInterfaz::loop(int)
 {
-    int t = glutGet(GLUT_ELAPSED_TIME);
+    int t = glutGet(GLUT_ELAPSED_TIME); //numero de milisegundos desde que se llamo a glutinit()
     interfaz.dt = (t - interfaz.tUltimoFotograma) / 1000.0;
     interfaz.tUltimoFotograma = t;
     glutPostRedisplay();
-    glutTimerFunc(1000 / 60, set_timer, 0);
+    glutTimerFunc(1000 / FPS, loop, 0);
+    glutWarpPointer(interfaz.ancho_ventana / 2, interfaz.alto_ventana / 2);
 }
 
 

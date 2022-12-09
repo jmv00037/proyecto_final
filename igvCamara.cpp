@@ -96,14 +96,16 @@ void igvCamara::setPosition(float x, float y, float z) {
 }
 
 void igvCamara::onKeyBoard(unsigned char key, double dt) {
+    double y1 = P0[Y];
+    double y2 = r[Y];
     switch (key) {
         case 'w':
-            {
-                igvPunto3D dir;
+            {                igvPunto3D dir;
                 dir = r - P0;
                 dir.normalizar();
                 P0 += dir * (m_speed * dt);
                 r += dir * (m_speed * dt);
+                
             break;
             }
         case 's':{
@@ -127,33 +129,36 @@ void igvCamara::onKeyBoard(unsigned char key, double dt) {
             P0 += dir * (m_speed * dt);
             r += dir * (m_speed * dt);
             }
-        case '+':
-            m_speed += 0.1;
-            break;
-        case '-':
-            m_speed -= 0.1;
-            if(m_speed < 0.1f) m_speed = 0.1f;
-            break;
     }
+    P0[Y] = y1;
+    r[Y] = y2;
 }
 
-void igvCamara::mirar(double incAlfa, double incBeta)
+bool igvCamara::mirar(double incAlfa, double incBeta, double dt)
 {
-    beta += incBeta * 0.1;
-    alfa += incAlfa * 0.1;
-    if (beta > 89.0) {
-        beta = 89.0;
-    }
-    else if (beta < -89.0) {
-        beta = -89.0;
-    }
+    rAnterior = r;
+    beta += incBeta * mouseSpeed * dt;
+    alfa += incAlfa * mouseSpeed * dt;
+    
     double dist = sqrt((pow(r[X]-P0[X],2)  + pow(r[Z] - P0[Z], 2)));
     double alfaRad = alfa * M_PI / 180;
     double betaRad = beta * M_PI / 180;
+
+    
+
     double rxz = dist * cos(betaRad);
 
-    r[X] = P0[X] + sin(alfaRad) * rxz;
-    //r[Y] = P0[Y] + sin(betaRad) * dist;
-    r[Z] = P0[Z] - cos(alfaRad) * rxz;
+    
+        
 
+    r[X] = P0[X] + sin(alfaRad) * rxz;
+    r[Y] = P0[Y] + sin(betaRad) * dist;
+    r[Z] = P0[Z] - cos(alfaRad) * rxz;
+    if (abs(betaRad) > 0.5) { //bloqueo de camara en el eje Y
+        beta -= incBeta * mouseSpeed;
+        alfa -= incAlfa * mouseSpeed;
+        r = rAnterior;
+        return true;
+    }
+    return false;
 }

@@ -56,6 +56,8 @@ public:
     float m_speed = 17;
 
     //ROTACION CAMARA
+	igvPunto3D rAnterior;
+	float mouseSpeed = 0.5;
     double alfa = 0;
     double beta = 0;
     int m_window_Width, m_window_Height;
@@ -89,7 +91,7 @@ public:
 	void zoom(double factor); // realiza un zoom sobre la c�mara
     void setPosition(float x, float y, float z);
     void onKeyBoard(unsigned char key, double dt);
-    void mirar(double incAlfa, double incBeta);
+    bool mirar(double incAlfa, double incBeta, double dt);
 
     /*
 	void set_vista(tipoCamara t) { tipo = t; };

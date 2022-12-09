@@ -36,6 +36,10 @@ protected:
     double dt;
     double tUltimoFotograma;
 
+	//CAMARA STUFF
+	bool bloqueoCamara = false;
+	double anteriorX, anteriorY;
+
 public:
 	// Constructores por defecto y destructor
 	igvInterfaz();
@@ -70,7 +74,7 @@ public:
 	void set_ancho_ventana(int _ancho_ventana) { ancho_ventana = _ancho_ventana; };
 	void set_alto_ventana(int _alto_ventana) { alto_ventana = _alto_ventana; };
 
-    static void set_timer(int);
+    static void loop(int);
 };
 
 #endif
