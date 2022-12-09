@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "prac4", "prac4\prac4.vcxproj", "{48FD8B0F-4BE6-416C-B0F3-CACE51ACCE4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución", "Elementos de la solución", "{3EFE1359-5313-4F98-90FD-1593D0B7C875}"
+	ProjectSection(SolutionItems) = preProject
+		..\jmv00037\proyecto_final\modelos\brazoDer.obj = ..\jmv00037\proyecto_final\modelos\brazoDer.obj
+		..\jmv00037\proyecto_final\modelos\brazoIzq.obj = ..\jmv00037\proyecto_final\modelos\brazoIzq.obj
+		..\jmv00037\proyecto_final\modelos\cabeza.obj = ..\jmv00037\proyecto_final\modelos\cabeza.obj
+		..\jmv00037\proyecto_final\modelos\hombroDer.obj = ..\jmv00037\proyecto_final\modelos\hombroDer.obj
+		..\jmv00037\proyecto_final\modelos\hombroIzq.obj = ..\jmv00037\proyecto_final\modelos\hombroIzq.obj
+		..\jmv00037\proyecto_final\modelos\piernaDer.obj = ..\jmv00037\proyecto_final\modelos\piernaDer.obj
+		..\jmv00037\proyecto_final\modelos\piernaIzq.obj = ..\jmv00037\proyecto_final\modelos\piernaIzq.obj
+		..\jmv00037\proyecto_final\modelos\piernaSuperiorDer.obj = ..\jmv00037\proyecto_final\modelos\piernaSuperiorDer.obj
+		..\jmv00037\proyecto_final\modelos\piernaSuperiorIzq.obj = ..\jmv00037\proyecto_final\modelos\piernaSuperiorIzq.obj
+		..\jmv00037\proyecto_final\modelos\torso.obj = ..\jmv00037\proyecto_final\modelos\torso.obj
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48FD8B0F-4BE6-416C-B0F3-CACE51ACCE4E}.Debug|x64.ActiveCfg = Debug|x64
+		{48FD8B0F-4BE6-416C-B0F3-CACE51ACCE4E}.Debug|x64.Build.0 = Debug|x64
+		{48FD8B0F-4BE6-416C-B0F3-CACE51ACCE4E}.Debug|x86.ActiveCfg = Debug|Win32
+		{48FD8B0F-4BE6-416C-B0F3-CACE51ACCE4E}.Debug|x86.Build.0 = Debug|Win32
+		{48FD8B0F-4BE6-416C-B0F3-CACE51ACCE4E}.Release|x64.ActiveCfg = Release|x64
+		{48FD8B0F-4BE6-416C-B0F3-CACE51ACCE4E}.Release|x64.Build.0 = Release|x64
+		{48FD8B0F-4BE6-416C-B0F3-CACE51ACCE4E}.Release|x86.ActiveCfg = Release|Win32
+		{48FD8B0F-4BE6-416C-B0F3-CACE51ACCE4E}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4653405C-FFC4-4816-8E82-686FBCE76A4A}
+	EndGlobalSection
+EndGlobal
