@@ -155,8 +155,8 @@ bool igvCamara::mirar(double incAlfa, double incBeta, double dt)
     r[Y] = P0[Y] + sin(betaRad) * dist;
     r[Z] = P0[Z] - cos(alfaRad) * rxz;
     if (abs(betaRad) > 0.5) { //bloqueo de camara en el eje Y
-        beta -= incBeta * mouseSpeed;
-        alfa -= incAlfa * mouseSpeed;
+        beta -= incBeta * mouseSpeed * dt;
+        alfa -= incAlfa * mouseSpeed * dt;
         r = rAnterior;
         return true;
     }

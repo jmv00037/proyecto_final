@@ -1,7 +1,7 @@
 #include <cstdlib>
 
 #include "igvInterfaz.h"
-#include <GL\freeglut.h>
+//#include <GL\freeglut.h>
 
 // Objetos globales
 // objeto que contiene la configuraci�n y la interacci�n con la ventana de visualizaci�n

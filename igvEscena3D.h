@@ -10,6 +10,7 @@
 #endif
 
 #include "utils.h"
+#include "igvTextura.h"
 
 struct parte{
     std::vector<float> vertices;
@@ -27,13 +28,14 @@ enum {
 
 class igvEscena3D {
 protected:
+    igvTextura t;
 	////// Apartado C: a�adir qu� los atributos para el control de los grados de libertad del modelo
 	float maxCabeza=60,minCabeza=-60,maxPie=60,minPie=-60,maxHom=90,minHom=-130;
     float movimientoCabeza,movimientoHombroDer,movimientoHombroIzq,movimientoTorso,movimientoPiernaIzq,movimientoPiernaDer;
 	// Otros atributos		
 	bool ejes;
     // Partes del objeto
-    parte cabeza,brazoIzq,brazoDer,piernaIzq,piernaDer,torso,hombroDer,hombroIzq,piernaSupIzq,piernaSupDer;
+    parte cabeza,brazoIzq,brazoDer,piernaIzq,piernaDer,torso,hombroDer,hombroIzq,piernaSupIzq,piernaSupDer,mundo;
     bool cargadoCorrectamente;
 
 public:
@@ -46,7 +48,7 @@ public:
 	void visualizar(void);
 
 	///// Apartado B: M�todos para visualizar cada parte del modelo
-    void visualizarPartes(std::vector<float>& v, std::vector<float>& n, std::vector<unsigned int>& tri);
+    void visualizarPartes(std::vector<float>& v, std::vector<float>& n, std::vector<unsigned int>& tri, std::vector<float>& tex);
 
 	////// Apartado C: a�adir aqu� los m�todos para modificar los grados de libertad del modelo
 	float restriccion(float angle, int min, int max, float& mov);

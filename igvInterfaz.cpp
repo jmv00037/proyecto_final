@@ -21,7 +21,7 @@ igvInterfaz::~igvInterfaz() {}
 // Metodos publicos ----------------------------------------
 
 void igvInterfaz::crear_mundo(void) {
-    interfaz.camara = igvCamara(alto_ventana,ancho_ventana,igvPunto3D(0,0,0),igvPunto3D(0,0,1),igvPunto3D(0,1,0));
+    interfaz.camara = igvCamara(alto_ventana,ancho_ventana,igvPunto3D(0,3,0),igvPunto3D(0,0,1),igvPunto3D(0,1,0));
     interfaz.camara.set(IGV_PERSPECTIVA, igvPunto3D(25,7,25),igvPunto3D(25,7,24),igvPunto3D(0,1,0),60.0, 1.0 , 0.2, -1*3);
 }
 
@@ -164,12 +164,13 @@ void igvInterfaz::inicializa_callbacks() {
 
 void igvInterfaz::loop(int)
 {
+    glutWarpPointer(interfaz.ancho_ventana / 2, interfaz.alto_ventana / 2); //Mantiene el ranton en el centro
     int t = glutGet(GLUT_ELAPSED_TIME); //numero de milisegundos desde que se llamo a glutinit()
     interfaz.dt = (t - interfaz.tUltimoFotograma) / 1000.0;
     interfaz.tUltimoFotograma = t;
     glutPostRedisplay();
     glutTimerFunc(1000 / FPS, loop, 0);
-    glutWarpPointer(interfaz.ancho_ventana / 2, interfaz.alto_ventana / 2);
+   
 }
 
 
