@@ -2,16 +2,25 @@
 #include <stdio.h>
 
 #include "igvEscena3D.h"
+#include "igvTextura.h"
+#include <iostream>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 // Metodos constructores 
 
-igvEscena3D::igvEscena3D() {
+igvEscena3D::igvEscena3D(): t("paredes.bmp") {
 	ejes = true;
     movimientoCabeza=0; movimientoHombroDer=0,movimientoHombroIzq=0;
     //Se cargan del fichero los objetos y se guardan
 
+    
 
     std::string ruta = "..\\modelos\\";
+    std::string pMundo = ruta + "Dungeon.obj";
+    utils::cargaOBJ(&pMundo[0], mundo.vertices, mundo.texturas, mundo.normales, mundo.triangulos);
+    
     std::string pCabeza = ruta + "cabeza.obj";
     std::string pTorso = ruta +"torso.obj";
     std::string pBrazoIzq = ruta +"brazoIzq.obj";
@@ -72,13 +81,13 @@ void pintar_ejes(void) {
 
 ///// Apartado B: M�todos para visualizar cada parte del modelo
 
-void igvEscena3D::visualizarPartes(std::vector<float> &v, std::vector<float> &n, std::vector<unsigned int> &tri) {
+void igvEscena3D::visualizarPartes(std::vector<float> &v, std::vector<float> &n, std::vector<unsigned int> &tri, std::vector<float>& tex) {
     glFlush();
 
     glEnable(GL_TRIANGLES);
     glShadeModel(GL_SMOOTH);
 
-    /* Apartado B: TODO */
+
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, 0, &v[0]);
 
@@ -87,6 +96,13 @@ void igvEscena3D::visualizarPartes(std::vector<float> &v, std::vector<float> &n,
 
     glEnableClientState(GL_NORMAL_ARRAY);
     glNormalPointer(GL_FLOAT,0,&n[0]);
+
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    t.aplicar();
+    glTexCoordPointer(2,GL_FLOAT,0, &n[0]);
+    glDrawArrays(GL_QUADS, 0, 4);
+    t.aplicar();
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 ////// Apartado C: a�adir aqu� los m�todos para modificar los grados de libertad del modelo
@@ -118,6 +134,62 @@ float igvEscena3D::moverPiernaIzq(float angle) {
     return restriccion(angle,minPie,maxPie,movimientoPiernaIzq);
 }
 
+static void
+drawBox(GLfloat size, GLenum type)
+{
+    static GLfloat n[6][3] =
+    {
+      {-1.0, 0.0, 0.0},
+      {0.0, 1.0, 0.0},
+      {1.0, 0.0, 0.0},
+      {0.0, -1.0, 0.0},
+      {0.0, 0.0, 1.0},
+      {0.0, 0.0, -1.0}
+    };
+    static GLint faces[6][4] =
+    {
+      {0, 1, 2, 3},
+      {3, 2, 6, 7},
+      {7, 6, 5, 4},
+      {4, 5, 1, 0},
+      {5, 6, 2, 1},
+      {7, 4, 0, 3}
+    };
+    GLfloat v[8][3];
+    GLint i;
+
+    v[0][0] = v[1][0] = v[2][0] = v[3][0] = -size / 2;
+    v[4][0] = v[5][0] = v[6][0] = v[7][0] = size / 2;
+    v[0][1] = v[1][1] = v[4][1] = v[5][1] = -size / 2;
+    v[2][1] = v[3][1] = v[6][1] = v[7][1] = size / 2;
+    v[0][2] = v[3][2] = v[4][2] = v[7][2] = -size / 2;
+    v[1][2] = v[2][2] = v[5][2] = v[6][2] = size / 2;
+
+    for (i = 5; i >= 0; i--) {
+        glBegin(type);
+        glNormal3fv(&n[i][0]);
+        glTexCoord2f(0, 0);
+        glVertex3fv(&v[faces[i][0]][0]);
+        glTexCoord2f(0, 1);
+        glVertex3fv(&v[faces[i][1]][0]);
+        glTexCoord2f(1, 1);
+        glVertex3fv(&v[faces[i][2]][0]);
+        glTexCoord2f(1, 0);
+        glVertex3fv(&v[faces[i][3]][0]);
+        glEnd();
+    }
+}
+
+/*
+Esta funci�n genera un cubo s�lido al que se le pueden a�adir texturas (la funci�n glutSolidCube por defecto de GLUT no permite esto).
+@param size Tama�o.
+*/
+void APIENTRY
+glutSolidCubeTextured(GLdouble size)
+{
+    drawBox(size, GL_QUADS);
+}
+
 void igvEscena3D::visualizar() {
 	// crear luces
 	GLfloat luz0[4] = { 5.0,5.0,5.0,1 }; // luz puntual
@@ -128,37 +200,43 @@ void igvEscena3D::visualizar() {
 	glPushMatrix(); // guarda la matriz de modelado
 
 	// se pintan los ejes
-	if (ejes) pintar_ejes();
+	//if (ejes) pintar_ejes();
 
 	//glLightfv(GL_LIGHT0,GL_POSITION,luz0); // la luz se coloca aqu� si se mueve junto con la escena (tambi�n habr�a que desactivar la de arriba).
 
+    float color_paredes[3] = { 40 / 255.0, 40 / 255.0, 40 / 255.0 };
 
+    t.aplicar(); //Textura para las paredes
+    glPushMatrix();
+    glMaterialfv(GL_FRONT, GL_EMISSION, color_paredes); //Aplicar el color de la pared
+    //glTranslatef(1, 4, 1); //Colocar en la posici�n actual el cubo creado.
+    glScalef(1, 5, 1); //Hacer el cubo m�s alto para que no se pueda ver el laberinto por arriba
+    glutSolidCubeTextured(1);
+    glPopMatrix();
+    
 
-	///// Apartado B: aqui hay que añadir la visualizacion del arbol del modelo utilizando la pila de matrices de OpenGL
-	/////             se recomienda crear una metodo auxiliar que encapsule todo el codigo para la visualizacion
-	/////             del modelo, dejando aqui solo la llamada a ese metodo, asi como distintas funciones una para cada
-	/////			  parte del modelo.
+    //visualizarPartes(mundo.vertices,mundo.normales,mundo.triangulos,mundo.texturas);
+    
 
-
-
+    /*
     if(cargadoCorrectamente){
         glPushMatrix();
             glRotated(movimientoTorso,0,1,0);
-            visualizarPartes(torso.vertices,torso.normales,torso.triangulos);
+            visualizarPartes(torso.vertices,torso.normales,torso.triangulos,torso.texturas);
             //CABEZA
             glPushMatrix();
                 glRotated(movimientoCabeza,0,1,0);
-                visualizarPartes(cabeza.vertices,cabeza.normales,cabeza.triangulos);
+                visualizarPartes(cabeza.vertices,cabeza.normales,cabeza.triangulos,cabeza.texturas);
             glPopMatrix();
             //HOMBRO IZQUIERDO
             glPushMatrix();
                 glTranslatef(-0.179,1.88,1.03);
                 glRotated(movimientoHombroIzq,0,0,1);
                 glTranslatef(0.179,-1.88,-1.03);
-                visualizarPartes(hombroIzq.vertices,hombroIzq.normales,hombroIzq.triangulos);
+                visualizarPartes(hombroIzq.vertices,hombroIzq.normales,hombroIzq.triangulos,hombroIzq.texturas);
                 //BRAZO IZQUIERDO
                 glPushMatrix();
-                    visualizarPartes(brazoIzq.vertices,brazoIzq.normales,brazoIzq.triangulos);
+                    visualizarPartes(brazoIzq.vertices,brazoIzq.normales,brazoIzq.triangulos,brazoIzq.texturas);
                 glPopMatrix();
             glPopMatrix();
             //HOMBRO DERECHO
@@ -166,10 +244,10 @@ void igvEscena3D::visualizar() {
                 glTranslatef(-0.112,1.88,-1.25);
                 glRotated(movimientoHombroDer,0,0,1);
                 glTranslatef(0.112,-1.88,1.25);
-                visualizarPartes(hombroDer.vertices,hombroDer.normales,hombroDer.triangulos);
+                visualizarPartes(hombroDer.vertices,hombroDer.normales,hombroDer.triangulos,hombroDer.texturas);
                 //BRAZO DERECHO
                 glPushMatrix();
-                    visualizarPartes(brazoDer.vertices,brazoDer.normales,brazoDer.triangulos);
+                    visualizarPartes(brazoDer.vertices,brazoDer.normales,brazoDer.triangulos,brazoDer.texturas);
                 glPopMatrix();
             glPopMatrix();
             //PARTE SUPERIOR DE LA PIERNA DERECHA
@@ -177,10 +255,10 @@ void igvEscena3D::visualizar() {
                 glTranslatef(-0.00468,-0.3,-0.544);
                 glRotated(movimientoPiernaDer,0,0,1);
                 glTranslatef(0.00468,0.3,0.544);
-                visualizarPartes(piernaSupDer.vertices,piernaSupDer.normales,piernaSupDer.triangulos);
+                visualizarPartes(piernaSupDer.vertices,piernaSupDer.normales,piernaSupDer.triangulos,piernaSupDer.texturas);
                 //PIERNA DERECHA
                 glPushMatrix();
-                    visualizarPartes(piernaDer.vertices,piernaDer.normales,piernaDer.triangulos);
+                    visualizarPartes(piernaDer.vertices,piernaDer.normales,piernaDer.triangulos,piernaDer.texturas);
                 glPopMatrix();
             glPopMatrix();
             //PARTE SUPERIOR DE LA PIERNA IZQUIERDA
@@ -188,15 +266,15 @@ void igvEscena3D::visualizar() {
                 glTranslatef(-0.00468,-0.3,-0.544);
                 glRotated(movimientoPiernaIzq,0,0,1);
                 glTranslatef(0.00468,0.3,0.544);
-                visualizarPartes(piernaSupIzq.vertices,piernaSupIzq.normales,piernaSupIzq.triangulos);
+                visualizarPartes(piernaSupIzq.vertices,piernaSupIzq.normales,piernaSupIzq.triangulos,piernaSupIzq.texturas);
                 //PIERNA IZQUIERDA
                 glPushMatrix();
-                    visualizarPartes(piernaIzq.vertices,piernaIzq.normales,piernaIzq.triangulos);
+                    visualizarPartes(piernaIzq.vertices,piernaIzq.normales,piernaIzq.triangulos,piernaIzq.texturas);
                 glPopMatrix();
             glPopMatrix();
 
         glPopMatrix();
-    }
+    }*/
 	glPopMatrix(); // restaura la matriz de modelado
 
 }
