@@ -19,18 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\jmv00037\proyecto_final\bmp.cpp" />
     <ClCompile Include="..\..\jmv00037\proyecto_final\igvCamara.cpp" />
     <ClCompile Include="..\..\jmv00037\proyecto_final\igvEscena3D.cpp" />
     <ClCompile Include="..\..\jmv00037\proyecto_final\igvInterfaz.cpp" />
     <ClCompile Include="..\..\jmv00037\proyecto_final\igvPunto3D.cpp" />
+    <ClCompile Include="..\..\jmv00037\proyecto_final\igvTextura.cpp" />
     <ClCompile Include="..\..\jmv00037\proyecto_final\main.cpp" />
     <ClCompile Include="..\..\jmv00037\proyecto_final\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\jmv00037\proyecto_final\bmp.h" />
     <ClInclude Include="..\..\jmv00037\proyecto_final\igvCamara.h" />
     <ClInclude Include="..\..\jmv00037\proyecto_final\igvEscena3D.h" />
     <ClInclude Include="..\..\jmv00037\proyecto_final\igvInterfaz.h" />
     <ClInclude Include="..\..\jmv00037\proyecto_final\igvPunto3D.h" />
+    <ClInclude Include="..\..\jmv00037\proyecto_final\igvTextura.h" />
+    <ClInclude Include="..\..\jmv00037\proyecto_final\stb_image.h" />
     <ClInclude Include="..\..\jmv00037\proyecto_final\utils.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -124,16 +129,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\cojou\source\repos\prac4\Dependencias\SDL2_image-2.6.2\include;C:\Users\cojou\source\repos\prac4\Dependencias\SDL2-2.26.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
-      <AdditionalDependencies>freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\cojou\source\repos\prac4\Dependencias\SDL2_image-2.6.2\lib\x86;C:\Users\cojou\source\repos\prac4\Dependencias\SDL2-2.26.0\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)Dependencias\freeglut\bin\$(Platform)\freeglut.dll" "$(OutDir)"</Command>
