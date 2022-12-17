@@ -76,6 +76,7 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
         case 's':
             interfaz.camara.onKeyBoard(key,interfaz.dt);
             interfaz.camara.aplicar();
+            interfaz.escena.setPosicionCamara(interfaz.camara.P0);
             break;
         case 'e': // activa/desactiva la visualizacion de los ejes
             interfaz.escena.set_ejes(interfaz.escena.get_ejes() ? false : true);

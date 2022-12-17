@@ -4,6 +4,8 @@
 #include "igvEscena3D.h"
 #include "igvTextura.h"
 #include <iostream>
+#include "igvInterfaz.h"
+#include "igvCamara.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -14,7 +16,8 @@ igvEscena3D::igvEscena3D(): t("paredes.bmp") {
 	ejes = true;
     movimientoCabeza=0; movimientoHombroDer=0,movimientoHombroIzq=0;
     //Se cargan del fichero los objetos y se guardan
-
+    
+    posicionCamara.set(0.0,0.0,0.0);
     
     system("cd");
     std::string ruta = "modelos\\";
@@ -189,6 +192,12 @@ void glutSolidCubeTextured(GLdouble size)
     drawBox(size, GL_QUADS);
 }
 
+
+void igvEscena3D::setPosicionCamara(igvPunto3D _posicion) {
+    posicionCamara = _posicion;
+}
+
+
 void igvEscena3D::visualizar() {
 	// crear luces
 	//GLfloat luz0[4] = { 5.0,5.0,5.0,1 }; // luz puntual
@@ -200,7 +209,7 @@ void igvEscena3D::visualizar() {
 
     pintar_ejes();
 
-    igvFuenteLuz luzPuntual(GL_LIGHT0, igvPunto3D(3.0, 3.0, 0.0), igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.0), double(0.0));
+    igvFuenteLuz luzPuntual(GL_LIGHT0, posicionCamara, igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.0), double(0.0));
     luzPuntual.aplicar();
     
     /*

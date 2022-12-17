@@ -40,6 +40,7 @@ protected:
     // Partes del objeto
     parte cabeza,brazoIzq,brazoDer,piernaIzq,piernaDer,torso,hombroDer,hombroIzq,piernaSupIzq,piernaSupDer,mundo;
     bool cargadoCorrectamente;
+    igvPunto3D posicionCamara;
 
 public:
 
@@ -76,6 +77,8 @@ public:
     float getMaxHom() const;
 
     float getMinHom() const;
+
+    void setPosicionCamara(igvPunto3D _posicion);
 
 };
 
