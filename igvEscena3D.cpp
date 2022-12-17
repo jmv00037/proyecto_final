@@ -2,27 +2,22 @@
 #include <stdio.h>
 
 #include "igvEscena3D.h"
-#include "igvTextura.h"
 #include <iostream>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 // Metodos constructores 
 
-igvEscena3D::igvEscena3D(): t("paredes.bmp") {
+igvEscena3D::igvEscena3D(){
 	ejes = true;
     movimientoCabeza=0; movimientoHombroDer=0,movimientoHombroIzq=0;
     //Se cargan del fichero los objetos y se guardan
-
-    
 
     std::string ruta = "..\\modelos\\";
     std::string pMundo = ruta + "Dungeon.obj";
     utils::cargaOBJ(&pMundo[0], mundo.vertices, mundo.texturas, mundo.normales, mundo.triangulos);
     
     std::string pCabeza = ruta + "cabeza.obj";
-    std::string pTorso = ruta +"torso.obj";
+    std::string pTorso = ruta +"untitled.obj";
     std::string pBrazoIzq = ruta +"brazoIzq.obj";
     std::string pBrazoDer = ruta +"brazoDer.obj";
     std::string pPiernaIzq = ruta +"piernaIzq.obj";
@@ -51,7 +46,6 @@ igvEscena3D::igvEscena3D(): t("paredes.bmp") {
 igvEscena3D::~igvEscena3D() {
 
 }
-
 
 // Metodos publicos 
 
@@ -83,26 +77,41 @@ void pintar_ejes(void) {
 
 void igvEscena3D::visualizarPartes(std::vector<float> &v, std::vector<float> &n, std::vector<unsigned int> &tri, std::vector<float>& tex) {
     glFlush();
+    
+    
+
+    /* clear screen */
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_TRIANGLES);
     glShadeModel(GL_SMOOTH);
 
-
+    //glColor3d(1, 1, 1);
+       
     glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_FLOAT, 0, &v[0]);
-
-    glDrawElements(GL_TRIANGLES, tri.size(), GL_UNSIGNED_INT, &tri[0]);
-    glDisableClientState(GL_VERTEX_ARRAY);
-
     glEnableClientState(GL_NORMAL_ARRAY);
-    glNormalPointer(GL_FLOAT,0,&n[0]);
-
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    t.aplicar();
-    glTexCoordPointer(2,GL_FLOAT,0, &n[0]);
-    glDrawArrays(GL_QUADS, 0, 4);
-    t.aplicar();
+
+    glBindTexture(GL_TEXTURE_2D, 2);    
+    glVertexPointer(3, GL_FLOAT, 0, &v[0]);
+    glNormalPointer(GL_FLOAT, 0, &n[0]);
+
+    glTexCoordPointer(4, GL_FLOAT, 3, &tex[0]);
+
+    //TRIANGULOS
+    glDrawElements(GL_TRIANGLES, tri.size(), GL_UNSIGNED_INT, &tri[0]);
+
+    // NORMALES
+    
+    
+    //glDisableClientState(GL_NORMAL_ARRAY);
+   
+    
+    
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    
+   
 }
 
 ////// Apartado C: a�adir aqu� los m�todos para modificar los grados de libertad del modelo
@@ -134,67 +143,18 @@ float igvEscena3D::moverPiernaIzq(float angle) {
     return restriccion(angle,minPie,maxPie,movimientoPiernaIzq);
 }
 
-static void
-drawBox(GLfloat size, GLenum type)
-{
-    static GLfloat n[6][3] =
-    {
-      {-1.0, 0.0, 0.0},
-      {0.0, 1.0, 0.0},
-      {1.0, 0.0, 0.0},
-      {0.0, -1.0, 0.0},
-      {0.0, 0.0, 1.0},
-      {0.0, 0.0, -1.0}
-    };
-    static GLint faces[6][4] =
-    {
-      {0, 1, 2, 3},
-      {3, 2, 6, 7},
-      {7, 6, 5, 4},
-      {4, 5, 1, 0},
-      {5, 6, 2, 1},
-      {7, 4, 0, 3}
-    };
-    GLfloat v[8][3];
-    GLint i;
-
-    v[0][0] = v[1][0] = v[2][0] = v[3][0] = -size / 2;
-    v[4][0] = v[5][0] = v[6][0] = v[7][0] = size / 2;
-    v[0][1] = v[1][1] = v[4][1] = v[5][1] = -size / 2;
-    v[2][1] = v[3][1] = v[6][1] = v[7][1] = size / 2;
-    v[0][2] = v[3][2] = v[4][2] = v[7][2] = -size / 2;
-    v[1][2] = v[2][2] = v[5][2] = v[6][2] = size / 2;
-
-    for (i = 5; i >= 0; i--) {
-        glBegin(type);
-        glNormal3fv(&n[i][0]);
-        glTexCoord2f(0, 0);
-        glVertex3fv(&v[faces[i][0]][0]);
-        glTexCoord2f(0, 1);
-        glVertex3fv(&v[faces[i][1]][0]);
-        glTexCoord2f(1, 1);
-        glVertex3fv(&v[faces[i][2]][0]);
-        glTexCoord2f(1, 0);
-        glVertex3fv(&v[faces[i][3]][0]);
-        glEnd();
-    }
-}
-
-/*
-Esta funci�n genera un cubo s�lido al que se le pueden a�adir texturas (la funci�n glutSolidCube por defecto de GLUT no permite esto).
-@param size Tama�o.
-*/
-void APIENTRY
-glutSolidCubeTextured(GLdouble size)
-{
-    drawBox(size, GL_QUADS);
+void igvEscena3D::paredExterior(int x,int z) {
+    glTranslatef(x, 5, z);
+    if(x==0)
+        glScalef(50, 4, 1); // expande el suelo
+    else
+        glScalef(1, 4, 50);
+    c.cargarCubo(PARED, 50, 4); //crea el cubo para el suelo
 }
 
 void igvEscena3D::visualizar() {
 	// crear luces
-	GLfloat luz0[4] = { 5.0,5.0,5.0,1 }; // luz puntual
-	glLightfv(GL_LIGHT0, GL_POSITION, luz0); // la luz se coloca aqu� si permanece fija y no se mueve con la escena
-	glEnable(GL_LIGHT0);
+	
 
 	// crear el modelo
 	glPushMatrix(); // guarda la matriz de modelado
@@ -203,20 +163,65 @@ void igvEscena3D::visualizar() {
 	//if (ejes) pintar_ejes();
 
 	//glLightfv(GL_LIGHT0,GL_POSITION,luz0); // la luz se coloca aqu� si se mueve junto con la escena (tambi�n habr�a que desactivar la de arriba).
-
-    float color_paredes[3] = { 40 / 255.0, 40 / 255.0, 40 / 255.0 };
-
-    t.aplicar(); //Textura para las paredes
-    glPushMatrix();
-    glMaterialfv(GL_FRONT, GL_EMISSION, color_paredes); //Aplicar el color de la pared
-    //glTranslatef(1, 4, 1); //Colocar en la posici�n actual el cubo creado.
-    glScalef(1, 5, 1); //Hacer el cubo m�s alto para que no se pueda ver el laberinto por arriba
-    glutSolidCubeTextured(1);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    
+    glPushMatrix(); //Crea el techo
+        glTranslatef(0, 10, 0);
+        glScalef(50, 1, 50); // expande el suelo
+        c.cargarCubo(SUELO, 50, 50); //crea el cubo para el suelo
+    glPopMatrix();
+    glPushMatrix(); //Crea el suelo
+        glScalef(50,1,50); // expande el suelo
+        c.cargarCubo(SUELO, 50,50); //crea el cubo para el suelo
+    glPopMatrix();
+        
+    glPushMatrix();//Crea las paredes exteriores
+        paredExterior(0,-50);
+    glPopMatrix();
+    glPushMatrix();//Crea las paredes exteriores
+        paredExterior(0,50);
+    glPopMatrix();
+    glPushMatrix();//Crea las paredes exteriores
+        paredExterior(50, 0);
+    glPopMatrix();
+    glPushMatrix();//Crea las paredes exteriores
+        paredExterior(-50, 0);
     glPopMatrix();
     
 
-    //visualizarPartes(mundo.vertices,mundo.normales,mundo.triangulos,mundo.texturas);
-    
+    glPushMatrix();//Crea las paredes habitacion
+        glTranslatef(25, 5,30);
+        glScalef(1, 4, 25);
+        c.cargarCubo(PARED2, 50, 4);
+    glPopMatrix();
+    glPushMatrix();//Crea las paredes habitacion
+        glTranslatef(-25, 5, 30);
+        glScalef(1, 4, 25);
+        c.cargarCubo(PARED2, 50, 4);
+    glPopMatrix();
+    glPushMatrix();//Crea las paredes habitacion
+        glTranslatef(-25, 5, -30);
+        glScalef(1, 4, 25);
+        c.cargarCubo(PARED2, 50, 4);
+    glPopMatrix();
+    glPushMatrix();//Crea las paredes habitacion
+        glTranslatef(25, 5, -30);
+        glScalef(1, 4, 25);
+        c.cargarCubo(PARED2, 50, 4);
+    glPopMatrix();
+
+    glPushMatrix();//Crea puerta
+        glTranslatef(-25, 5, 0);
+        glScalef(1, 4, 5);
+        c.cargarCubo(PUERTA, 1, 1);
+    glPopMatrix();
+
+    glPushMatrix();//Crea puerta
+        glTranslatef(25, 5, 0);
+        glScalef(1, 4, 5);
+        c.cargarCubo(PUERTA, 1, 1);
+    glPopMatrix();
+
 
     /*
     if(cargadoCorrectamente){

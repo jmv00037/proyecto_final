@@ -11,6 +11,11 @@
 #include "cmath"
 #include "string"
 
+#define SUELO 1
+#define PARED 2
+#define PARED2 3
+#define PUERTA 4
+
 namespace utils{
 
     //FUNCIONES UTILES
@@ -28,6 +33,9 @@ namespace utils{
                   std::vector<float>& texture,
                   std::vector<float>& normals,
                   std::vector<unsigned int>& triangle);
+
+
+    unsigned char* LoadTexture(GLuint tex, const char* filename, int width, int height);
 
 }
 
