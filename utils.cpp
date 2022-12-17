@@ -59,3 +59,45 @@ bool utils::cargaOBJ(const char* path,std::vector<float> &vertices, std::vector<
     fclose(file);
     return true;
 }
+
+
+unsigned char* utils::LoadTexture(GLuint tex, const char* filename, int width, int height)
+{
+    // bmp 24 bit
+    unsigned char* data;
+    unsigned char R, G, B;
+    FILE* file;
+
+    file = fopen(filename, "rb");
+
+    if (file == NULL)return 0;
+    data = (unsigned char*)malloc(width * height * 3);
+    fseek(file, 128, 0);
+    fread(data, width * height * 3, 1, file);
+    fclose(file);
+
+    
+    int index;
+    for (int i = 0; i < width * height; ++i)
+    {
+        index = i * 3;
+        B = data[index]; G = data[index + 1]; R = data[index + 2];
+        data[index] = R; data[index + 1] = G; data[index + 2] = B;
+    }
+
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    //glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+    return data;
+}

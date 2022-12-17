@@ -14,6 +14,7 @@
 
 #include "igvFuenteLuz.h"
 
+#include "cubo.h"
 
 struct parte{
     std::vector<float> vertices;
@@ -31,7 +32,7 @@ enum {
 
 class igvEscena3D {
 protected:
-    igvTextura t;
+    cubo c;
 	////// Apartado C: a�adir qu� los atributos para el control de los grados de libertad del modelo
 	float maxCabeza=60,minCabeza=-60,maxPie=60,minPie=-60,maxHom=90,minHom=-130;
     float movimientoCabeza,movimientoHombroDer,movimientoHombroIzq,movimientoTorso,movimientoPiernaIzq,movimientoPiernaDer;
@@ -61,6 +62,7 @@ public:
     float moverHombroIzq(float angle);
     float moverPiernaDer(float angle);
     float moverPiernaIzq(float angle);
+    void paredExterior(int x, int z);
     float moverTorso(float angle);
 
 	bool get_ejes() { return ejes; };

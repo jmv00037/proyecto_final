@@ -21,8 +21,7 @@ igvInterfaz::~igvInterfaz() {}
 // Metodos publicos ----------------------------------------
 
 void igvInterfaz::crear_mundo(void) {
-    interfaz.camara = igvCamara(alto_ventana,ancho_ventana,igvPunto3D(0,3,0),igvPunto3D(0,0,1),igvPunto3D(0,1,0));
-    interfaz.camara.set(IGV_PERSPECTIVA, igvPunto3D(25,7,25),igvPunto3D(25,7,24),igvPunto3D(0,1,0),60.0, 1.0 , 0.2, -1*3);
+    interfaz.camara = igvCamara(alto_ventana,ancho_ventana,igvPunto3D(0,4,0),igvPunto3D(0,0,1),igvPunto3D(0,1,0));
 }
 
 void igvInterfaz::configura_entorno(int argc, char** argv,
