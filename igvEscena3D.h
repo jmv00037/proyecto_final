@@ -12,6 +12,9 @@
 #include "utils.h"
 #include "igvTextura.h"
 
+#include "igvFuenteLuz.h"
+
+
 struct parte{
     std::vector<float> vertices;
     std::vector<float> normales;

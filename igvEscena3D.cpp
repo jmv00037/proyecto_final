@@ -16,8 +16,8 @@ igvEscena3D::igvEscena3D(): t("paredes.bmp") {
     //Se cargan del fichero los objetos y se guardan
 
     
-
-    std::string ruta = "..\\modelos\\";
+    system("cd");
+    std::string ruta = "modelos\\";
     std::string pMundo = ruta + "Dungeon.obj";
     utils::cargaOBJ(&pMundo[0], mundo.vertices, mundo.texturas, mundo.normales, mundo.triangulos);
     
@@ -191,12 +191,38 @@ void glutSolidCubeTextured(GLdouble size)
 
 void igvEscena3D::visualizar() {
 	// crear luces
-	GLfloat luz0[4] = { 5.0,5.0,5.0,1 }; // luz puntual
-	glLightfv(GL_LIGHT0, GL_POSITION, luz0); // la luz se coloca aqu� si permanece fija y no se mueve con la escena
-	glEnable(GL_LIGHT0);
+	//GLfloat luz0[4] = { 5.0,5.0,5.0,1 }; // luz puntual
+	//glLightfv(GL_LIGHT0, GL_POSITION, luz0); // la luz se coloca aqu� si permanece fija y no se mueve con la escena
+	//glEnable(GL_LIGHT0);
 
 	// crear el modelo
 	glPushMatrix(); // guarda la matriz de modelado
+
+    pintar_ejes();
+
+    igvFuenteLuz luzPuntual(GL_LIGHT0, igvPunto3D(3.0, 3.0, 0.0), igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.0), double(0.0));
+    luzPuntual.aplicar();
+    
+    /*
+    igvPunto3D posicionFoco(0.0, 3.0, 0.0);
+    igvColor ambiental(0.0, 0.0, 0.0, 1.0);
+    igvColor diferencial(1.0, 1.0, 1.0, 1.0);
+    igvColor especular(1.0, 1.0, 1.0, 1.0);
+    double a0 = 1.0;
+    double a1 = 0.1;
+    double a2 = 0.1;
+    igvPunto3D direccionFoco(0.0, -1.0, 0.0);
+    double angulo2 = 35.0;
+    double exponente2 = 0.0;
+
+
+
+    igvFuenteLuz luzFoco(GL_LIGHT1, posicionFoco, ambiental, diferencial, especular, a0, a1, a2, direccionFoco, angulo2, exponente2);
+    luzFoco.encender();
+    //igvFuenteLuz luzFoco(GL_LIGHT1, igvPunto3D(3.0, 1.0, 1.0), igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.1), double(0.1), igvPunto3D(0.0, -1.0, 0.0), angulo, exponente);
+    luzFoco.aplicar();
+    */
+
 
 	// se pintan los ejes
 	//if (ejes) pintar_ejes();

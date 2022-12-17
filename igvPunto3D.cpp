@@ -106,3 +106,9 @@ void igvPunto3D::normalizar() {
     c[Z] /= mod;
 }
 
+
+float* igvPunto3D::cloneToFloatArray() const 
+{
+    float* res = new float[4]{ (float)c[0], (float)c[1], (float)c[2], 1.0 };
+    return res;
+}
