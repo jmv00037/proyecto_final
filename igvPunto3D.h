@@ -61,6 +61,7 @@ public:
     void normalizar();
 
 	void set(const double& x, const double& y, const double& z);
+	float* cloneToFloatArray() const;
 };
 #endif
 

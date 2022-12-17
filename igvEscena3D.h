@@ -10,9 +10,12 @@
 #endif
 
 #include "utils.h"
+
+#include "igvFuenteLuz.h"
+
 #include "cubo.h"
 
-struct parte{
+struct parte {
     std::vector<float> vertices;
     std::vector<float> normales;
     std::vector<float> texturas;
@@ -20,38 +23,39 @@ struct parte{
 };
 
 enum {
-	basex,
-	cuerpoinferior,
-	cuerposuperior,
-	brazo
+    basex,
+    cuerpoinferior,
+    cuerposuperior,
+    brazo
 };
 
 class igvEscena3D {
 protected:
     cubo c;
-	////// Apartado C: a�adir qu� los atributos para el control de los grados de libertad del modelo
-	float maxCabeza=60,minCabeza=-60,maxPie=60,minPie=-60,maxHom=90,minHom=-130;
-    float movimientoCabeza,movimientoHombroDer,movimientoHombroIzq,movimientoTorso,movimientoPiernaIzq,movimientoPiernaDer;
-	// Otros atributos		
-	bool ejes;
+    ////// Apartado C: a�adir qu� los atributos para el control de los grados de libertad del modelo
+    float maxCabeza = 60, minCabeza = -60, maxPie = 60, minPie = -60, maxHom = 90, minHom = -130;
+    float movimientoCabeza, movimientoHombroDer, movimientoHombroIzq, movimientoTorso, movimientoPiernaIzq, movimientoPiernaDer;
+    // Otros atributos		
+    bool ejes;
     // Partes del objeto
-    parte cabeza,brazoIzq,brazoDer,piernaIzq,piernaDer,torso,hombroDer,hombroIzq,piernaSupIzq,piernaSupDer,mundo;
+    parte cabeza, brazoIzq, brazoDer, piernaIzq, piernaDer, torso, hombroDer, hombroIzq, piernaSupIzq, piernaSupDer, mundo;
     bool cargadoCorrectamente;
+   
 
 public:
+    igvFuenteLuz luz;
+    // Constructores por defecto y destructor
+    igvEscena3D();
+    ~igvEscena3D();
 
-	// Constructores por defecto y destructor
-	igvEscena3D();
-	~igvEscena3D();
+    // metodo con las llamadas OpenGL para visualizar la escena
+    void visualizar(void);
 
-	// metodo con las llamadas OpenGL para visualizar la escena
-	void visualizar(void);
-
-	///// Apartado B: M�todos para visualizar cada parte del modelo
+    ///// Apartado B: M�todos para visualizar cada parte del modelo
     void visualizarPartes(std::vector<float>& v, std::vector<float>& n, std::vector<unsigned int>& tri, std::vector<float>& tex);
 
-	////// Apartado C: a�adir aqu� los m�todos para modificar los grados de libertad del modelo
-	float restriccion(float angle, int min, int max, float& mov);
+    ////// Apartado C: a�adir aqu� los m�todos para modificar los grados de libertad del modelo
+    float restriccion(float angle, int min, int max, float& mov);
     float moverCabeza(float angle);
     float moverHombroDer(float angle);
     float moverHombroIzq(float angle);
@@ -60,8 +64,8 @@ public:
     void paredExterior(int x, int z);
     float moverTorso(float angle);
 
-	bool get_ejes() { return ejes; };
-	void set_ejes(bool _ejes) { ejes = _ejes; };
+    bool get_ejes() { return ejes; };
+    void set_ejes(bool _ejes) { ejes = _ejes; };
 
     float getMaxCabeza() const;
 
@@ -74,6 +78,8 @@ public:
     float getMaxHom() const;
 
     float getMinHom() const;
+
+    void setPosicionCamara(igvPunto3D _posicion);
 
 };
 
