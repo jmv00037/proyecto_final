@@ -13,6 +13,7 @@
 #include "igvTextura.h"
 
 #include "igvFuenteLuz.h"
+#include "robot.h"
 
 
 struct parte{
@@ -41,6 +42,24 @@ protected:
     parte cabeza,brazoIzq,brazoDer,piernaIzq,piernaDer,torso,hombroDer,hombroIzq,piernaSupIzq,piernaSupDer,mundo;
     bool cargadoCorrectamente;
     igvPunto3D posicionCamara;
+
+
+
+	int rotacionBaseY;
+	int rotacionBaseX;
+	int rotacionBaseZ;
+
+	int rotacionHombro1X;
+	int rotacionHombro1Z;
+	int rotacionHombro2X;
+	int rotacionHombro2Z;
+	int rotacionCodo1;
+	int rotacionCodo2;
+	int rotacionCuello;
+	int rotacionMano1;
+	int rotacionMano2;
+	int rotacionPierna1;
+	int rotacionPierna2;
 
 public:
 
@@ -79,6 +98,9 @@ public:
     float getMinHom() const;
 
     void setPosicionCamara(igvPunto3D _posicion);
+
+
+	robot maniqui;
 
 };
 

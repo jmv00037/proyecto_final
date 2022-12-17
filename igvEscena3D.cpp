@@ -12,7 +12,7 @@
 
 // Metodos constructores 
 
-igvEscena3D::igvEscena3D(): t("paredes.bmp") {
+igvEscena3D::igvEscena3D() : maniqui(igvPunto3D(5, 5, 5)) {
 	ejes = true;
     movimientoCabeza=0; movimientoHombroDer=0,movimientoHombroIzq=0;
     //Se cargan del fichero los objetos y se guardan
@@ -49,6 +49,8 @@ igvEscena3D::igvEscena3D(): t("paredes.bmp") {
         cargadoCorrectamente = false;
 	// Apartado C: inicializar los atributos para el control de los grados de libertad del modelo 
 
+
+    
 }
 
 igvEscena3D::~igvEscena3D() {
@@ -209,8 +211,30 @@ void igvEscena3D::visualizar() {
 
     pintar_ejes();
 
-    igvFuenteLuz luzPuntual(GL_LIGHT0, posicionCamara, igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.0), double(0.0));
-    luzPuntual.aplicar();
+    //igvFuenteLuz luzPuntual(GL_LIGHT0, posicionCamara, igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.0), double(0.0));
+    //luzPuntual.aplicar();
+
+    igvPunto3D posicionFoco(0.0, 3.0, 0.0);
+    igvColor ambiental(0.0, 0.0, 0.0, 1.0);
+    igvColor diferencial(1.0, 1.0, 1.0, 1.0);
+    igvColor especular(1.0, 1.0, 1.0, 1.0);
+    double a0 = 1.0;
+    double a1 = 0.1;
+    double a2 = 0.1;
+    igvPunto3D direccionFoco(0.0, -1.0, 0.0);
+    double angulo2 = 35.0;
+    double exponente2 = 0.0;
+
+
+
+    igvFuenteLuz luzFoco(GL_LIGHT1, posicionFoco, ambiental, diferencial, especular, a0, a1, a2, direccionFoco, angulo2, exponente2);
+    luzFoco.encender();
+    luzFoco.aplicar();
+
+
+
+
+    maniqui = robot(igvPunto3D(5, 5, 5));
     
     /*
     igvPunto3D posicionFoco(0.0, 3.0, 0.0);
@@ -310,6 +334,10 @@ void igvEscena3D::visualizar() {
         glPopMatrix();
     }*/
 	glPopMatrix(); // restaura la matriz de modelado
+
+
+    
+    
 
 }
 

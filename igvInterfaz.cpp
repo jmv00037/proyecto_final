@@ -12,7 +12,8 @@ extern igvInterfaz interfaz; // los callbacks deben ser estaticos y se requiere 
 // Metodos constructores -----------------------------------
 
 igvInterfaz::igvInterfaz() {
-
+	animacion2 = true;
+	movimiento1 = false;
 }
 
 igvInterfaz::~igvInterfaz() {}
@@ -118,6 +119,7 @@ void igvInterfaz::set_glutDisplayFunc() {
 void igvInterfaz::set_glutIdleFunc() {
 	///// Apartado D: incluir el c�digo para animar el modelo de la manera m�s realista posible
 
+	/*
     if(interfaz.animacion) {
 
         if(interfaz.angCabeza==interfaz.escena.getMaxCabeza() || interfaz.angCabeza==interfaz.escena.getMinCabeza()){
@@ -140,6 +142,66 @@ void igvInterfaz::set_glutIdleFunc() {
         }
         glutPostRedisplay();
     }
+
+	*/
+
+	cout << "prueba: " << interfaz.animacion2 << endl;
+	cout << "interfaz: " << interfaz.escena.maniqui.get_rotacionHombro1X() << endl;
+
+	int velocidad = 1;
+
+	if (interfaz.animacion2 == true) {
+		if (interfaz.movimiento1 == false) {
+			if (interfaz.escena.maniqui.get_rotacionHombro2X() < 40) {
+				interfaz.escena.maniqui.set_rotacionHombro2X(interfaz.escena.maniqui.get_rotacionHombro2X() + velocidad);
+				//glutPostRedisplay();
+			}
+			if (interfaz.escena.maniqui.get_rotacionHombro1X() > -40) {
+				interfaz.escena.maniqui.set_rotacionHombro1X(interfaz.escena.maniqui.get_rotacionHombro1X() - velocidad);
+				//glutPostRedisplay();
+			}
+			if (interfaz.escena.maniqui.get_rotacionPierna2() < 40) {
+				interfaz.escena.maniqui.set_rotacionPierna2(interfaz.escena.maniqui.get_rotacionPierna2() + velocidad);
+				//glutPostRedisplay();
+			}
+			if (interfaz.escena.maniqui.get_rotacionPierna1() > -40) {
+				interfaz.escena.maniqui.set_rotacionPierna1(interfaz.escena.maniqui.get_rotacionPierna1() - velocidad);
+				glutPostRedisplay();
+			}
+			else {
+				interfaz.movimiento1 = true;
+			}
+
+		}
+		else {
+			if (interfaz.escena.maniqui.get_rotacionHombro2X() > -40) {
+				interfaz.escena.maniqui.set_rotacionHombro2X(interfaz.escena.maniqui.get_rotacionHombro2X() - velocidad);
+				//glutPostRedisplay();
+			}
+			if (interfaz.escena.maniqui.get_rotacionHombro1X() < 40) {
+				interfaz.escena.maniqui.set_rotacionHombro1X(interfaz.escena.maniqui.get_rotacionHombro1X() + velocidad);
+				//glutPostRedisplay();
+			}
+			if (interfaz.escena.maniqui.get_rotacionPierna2() > -40) {
+				interfaz.escena.maniqui.set_rotacionPierna2(interfaz.escena.maniqui.get_rotacionPierna2() - velocidad);
+				//glutPostRedisplay();
+			}
+			if (interfaz.escena.maniqui.get_rotacionPierna1() < 40) {
+				interfaz.escena.maniqui.set_rotacionPierna1(interfaz.escena.maniqui.get_rotacionPierna1() + velocidad);
+				glutPostRedisplay();
+			}
+			else {
+				interfaz.movimiento1 = false;
+			}
+		}
+
+
+	}
+
+
+
+
+
 }
 
 void igvInterfaz::passiveMouseCB(int x, int y) {

@@ -40,6 +40,9 @@ protected:
 	bool bloqueoCamara = false;
 	double anteriorX, anteriorY;
 
+	bool animacion2;
+	bool movimiento1;
+
 public:
 	// Constructores por defecto y destructor
 	igvInterfaz();
