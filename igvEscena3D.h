@@ -14,7 +14,8 @@
 
 #include "igvFuenteLuz.h"
 #include "robot.h"
-
+#include <vector>
+#include "igvCaja.h"
 
 struct parte{
     std::vector<float> vertices;
@@ -43,6 +44,10 @@ protected:
     bool cargadoCorrectamente;
     igvPunto3D posicionCamara;
 
+	std::vector<igvCaja*> cajas; //Array con todas los objetos de la escena
+	int pulsaX;
+	int pulsaY;
+	int pulsaZ;
 
 
 	int rotacionBaseY;
@@ -101,6 +106,13 @@ public:
 
 
 	robot maniqui;
+
+	void visualizarVB(void);
+
+	GLfloat r[3];
+	GLfloat g[3];
+	GLfloat b[3];
+	std::vector<igvCaja*>& getCajas() { return cajas; };
 
 };
 

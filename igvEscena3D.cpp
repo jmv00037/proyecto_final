@@ -50,6 +50,36 @@ igvEscena3D::igvEscena3D() : maniqui(igvPunto3D(5, 5, 5)) {
 	// Apartado C: inicializar los atributos para el control de los grados de libertad del modelo 
 
 
+    pulsaY = 1;
+    pulsaX = 1;
+    pulsaZ = 1;
+
+
+
+    int numero = 50;
+    for (int i = 0; i < 10; i++) {
+        r[i] = g[i] = b[i] = numero;
+        numero++;
+    }
+
+    //r[0] = g[0] = b[0] = 52;
+    //r[1] = g[1] = b[1] = 51;
+    //r[2] = g[2] = b[2] = 50;
+
+    //GLfloat r[] = { 254, 150, 50 };
+    //GLfloat g[] = { 254, 150, 50 };
+    //GLfloat b[] = { 254, 150, 50 };
+
+    for (int pilasY = 0; pilasY < pulsaY; pilasY++) {
+        //r[pilasY] += 1;
+        for (int pilasX = 0; pilasX < pulsaX; pilasX++) {
+            //g[pilasX] += 1;
+            for (int pilasZ = 0; pilasZ < pulsaZ; pilasZ++) {
+                cajas.push_back(new igvCaja(r[pilasY] / 255, g[pilasX] / 255, b[pilasZ] / 255)); //Se crea una nueva caja con el color indicado
+                //b[pilasZ] += 1;
+            }
+        }
+    }
     
 }
 
@@ -139,8 +169,7 @@ float igvEscena3D::moverPiernaIzq(float angle) {
     return restriccion(angle,minPie,maxPie,movimientoPiernaIzq);
 }
 
-static void
-drawBox(GLfloat size, GLenum type)
+/*static void drawBox(GLfloat size, GLenum type)
 {
     static GLfloat n[6][3] =
     {
@@ -183,7 +212,7 @@ drawBox(GLfloat size, GLenum type)
         glVertex3fv(&v[faces[i][3]][0]);
         glEnd();
     }
-}
+}*/
 
 /*
 Esta funci�n genera un cubo s�lido al que se le pueden a�adir texturas (la funci�n glutSolidCube por defecto de GLUT no permite esto).
@@ -191,7 +220,7 @@ Esta funci�n genera un cubo s�lido al que se le pueden a�adir texturas (la
 */
 void glutSolidCubeTextured(GLdouble size)
 {
-    drawBox(size, GL_QUADS);
+    /*drawBox(size, GL_QUADS);*/
 }
 
 
@@ -232,30 +261,8 @@ void igvEscena3D::visualizar() {
     luzFoco.aplicar();
 
 
-
-
     maniqui = robot(igvPunto3D(5, 5, 5));
     
-    /*
-    igvPunto3D posicionFoco(0.0, 3.0, 0.0);
-    igvColor ambiental(0.0, 0.0, 0.0, 1.0);
-    igvColor diferencial(1.0, 1.0, 1.0, 1.0);
-    igvColor especular(1.0, 1.0, 1.0, 1.0);
-    double a0 = 1.0;
-    double a1 = 0.1;
-    double a2 = 0.1;
-    igvPunto3D direccionFoco(0.0, -1.0, 0.0);
-    double angulo2 = 35.0;
-    double exponente2 = 0.0;
-
-
-
-    igvFuenteLuz luzFoco(GL_LIGHT1, posicionFoco, ambiental, diferencial, especular, a0, a1, a2, direccionFoco, angulo2, exponente2);
-    luzFoco.encender();
-    //igvFuenteLuz luzFoco(GL_LIGHT1, igvPunto3D(3.0, 1.0, 1.0), igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.1), double(0.1), igvPunto3D(0.0, -1.0, 0.0), angulo, exponente);
-    luzFoco.aplicar();
-    */
-
 
 	// se pintan los ejes
 	//if (ejes) pintar_ejes();
@@ -272,72 +279,35 @@ void igvEscena3D::visualizar() {
     glutSolidCubeTextured(1);
     glPopMatrix();
     
-
-    //visualizarPartes(mundo.vertices,mundo.normales,mundo.triangulos,mundo.texturas);
-    
-
-    /*
-    if(cargadoCorrectamente){
-        glPushMatrix();
-            glRotated(movimientoTorso,0,1,0);
-            visualizarPartes(torso.vertices,torso.normales,torso.triangulos,torso.texturas);
-            //CABEZA
-            glPushMatrix();
-                glRotated(movimientoCabeza,0,1,0);
-                visualizarPartes(cabeza.vertices,cabeza.normales,cabeza.triangulos,cabeza.texturas);
-            glPopMatrix();
-            //HOMBRO IZQUIERDO
-            glPushMatrix();
-                glTranslatef(-0.179,1.88,1.03);
-                glRotated(movimientoHombroIzq,0,0,1);
-                glTranslatef(0.179,-1.88,-1.03);
-                visualizarPartes(hombroIzq.vertices,hombroIzq.normales,hombroIzq.triangulos,hombroIzq.texturas);
-                //BRAZO IZQUIERDO
-                glPushMatrix();
-                    visualizarPartes(brazoIzq.vertices,brazoIzq.normales,brazoIzq.triangulos,brazoIzq.texturas);
-                glPopMatrix();
-            glPopMatrix();
-            //HOMBRO DERECHO
-            glPushMatrix();
-                glTranslatef(-0.112,1.88,-1.25);
-                glRotated(movimientoHombroDer,0,0,1);
-                glTranslatef(0.112,-1.88,1.25);
-                visualizarPartes(hombroDer.vertices,hombroDer.normales,hombroDer.triangulos,hombroDer.texturas);
-                //BRAZO DERECHO
-                glPushMatrix();
-                    visualizarPartes(brazoDer.vertices,brazoDer.normales,brazoDer.triangulos,brazoDer.texturas);
-                glPopMatrix();
-            glPopMatrix();
-            //PARTE SUPERIOR DE LA PIERNA DERECHA
-            glPushMatrix();
-                glTranslatef(-0.00468,-0.3,-0.544);
-                glRotated(movimientoPiernaDer,0,0,1);
-                glTranslatef(0.00468,0.3,0.544);
-                visualizarPartes(piernaSupDer.vertices,piernaSupDer.normales,piernaSupDer.triangulos,piernaSupDer.texturas);
-                //PIERNA DERECHA
-                glPushMatrix();
-                    visualizarPartes(piernaDer.vertices,piernaDer.normales,piernaDer.triangulos,piernaDer.texturas);
-                glPopMatrix();
-            glPopMatrix();
-            //PARTE SUPERIOR DE LA PIERNA IZQUIERDA
-            glPushMatrix();
-                glTranslatef(-0.00468,-0.3,-0.544);
-                glRotated(movimientoPiernaIzq,0,0,1);
-                glTranslatef(0.00468,0.3,0.544);
-                visualizarPartes(piernaSupIzq.vertices,piernaSupIzq.normales,piernaSupIzq.triangulos,piernaSupIzq.texturas);
-                //PIERNA IZQUIERDA
-                glPushMatrix();
-                    visualizarPartes(piernaIzq.vertices,piernaIzq.normales,piernaIzq.triangulos,piernaIzq.texturas);
-                glPopMatrix();
-            glPopMatrix();
-
-        glPopMatrix();
-    }*/
 	glPopMatrix(); // restaura la matriz de modelado
 
 
+    glPushMatrix();
+    visualizarVB();
+    glPopMatrix();
     
-    
+
+}
+
+//Método para la visualización del modelo sin luces (se utiliza durante la selección)
+void igvEscena3D::visualizarVB() {
+    GLfloat separacionX = 2.5;
+    GLfloat separacionZ = 2.5;
+
+    int cont = 0;
+    // Practica 2a. Parte B y C.
+    for (int pilasY = 0; pilasY < pulsaY; pilasY++) {
+        for (int pilasX = 0; pilasX < pulsaX; pilasX++) {
+            for (int pilasZ = 0; pilasZ < pulsaZ; pilasZ++) {
+                glPushMatrix();
+                glTranslatef(pilasX * separacionX, pilasY, pilasZ * separacionZ);
+                cajas[cont++]->visualizar(); //Se visualiza la caja
+                glPopMatrix();
+            }
+        }
+    }
+
+    //glutSolidCube(2);
 
 }
 

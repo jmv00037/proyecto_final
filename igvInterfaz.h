@@ -16,6 +16,12 @@
 
 using namespace std;
 
+typedef enum {
+	IGV_VISUALIZAR,
+	IGV_SELECCIONAR,
+} modoInterfaz;
+
+
 class igvInterfaz {
 protected:
 	// Atributos
@@ -43,6 +49,19 @@ protected:
 	bool animacion2;
 	bool movimiento1;
 
+	//Para la interaccion con colores
+	modoInterfaz modo; // IGV_VISUALIZAR: en la ventana se va a visualizar de manera normal la escena, 
+					   // IGV_SELECCIONAR: se ha pulsado sobre la ventana de visualización, la escena se debe
+					   // visualizar en modo selección
+	int cursorX, cursorY; // pixel de la pantalla sobre el que está situado el ratón, por pulsar o arrastrar
+
+	int objeto_seleccionado; // código del objeto seleccionado, -1 si no hay ninguno
+
+	bool boton_retenido; // indica si el botón está pulsado (true) o se ha soltado (false)
+
+	GLubyte colorPixelGuardado[3];
+
+
 public:
 	// Constructores por defecto y destructor
 	igvInterfaz();
@@ -69,6 +88,12 @@ public:
 	);
 	void inicializa_callbacks(); // inicializa todas los callbacks
 	void inicia_bucle_visualizacion(); // visualiza la escena y espera a eventos sobre la interfaz
+
+
+	// Apartado A y B: métodos para el control de la pulsación y el arrastre del ratón
+	static void  set_glutMouseFunc(GLint boton, GLint estado, GLint x, GLint y); // control de pulsacion del raton
+	static void  set_glutMotionFunc(GLint x, GLint y); // control del desplazamiento del raton con boton pulsado
+
 
 	// m�todos get_ y set_ de acceso a los atributos
 	int get_ancho_ventana() { return ancho_ventana; };
