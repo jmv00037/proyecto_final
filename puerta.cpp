@@ -25,6 +25,10 @@ puerta::~puerta() {
 	delete color;
 };
 
+void puerta::boton(cubo& c) {
+	c.sint(PUERTA, 1, 1);
+}
+
 //Método para visualizar una caja
 void puerta::visualizarSinT(cubo& c) {
 	glScalef(0.9, 4, 5);

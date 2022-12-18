@@ -8,56 +8,41 @@
 
 // Metodos constructores 
 
-igvEscena3D::igvEscena3D():luz(GL_LIGHT1, igvPunto3D(0, 5, 0), igvColor(1, 1, 1, 1), igvColor(0,0,0,0), igvColor(1, 1, 1, 1), 1, 0, 0, igvPunto3D(-1, -1, 0), 50, 0), maniqui(igvPunto3D(-40,5,-40),&c), p1(0.0,1.0,0.0), p2(0.0,0.0,1.0) {
+igvEscena3D::igvEscena3D():luz(GL_LIGHT0, igvPunto3D(1.0, 1.0, 1.0), igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.0), double(0.0)), maniqui(igvPunto3D(-40,5,-40),&c), p1(0.0,1.0,0.0), p2(0.0,0.0,1.0){
     ejes = true;
     movimientoCabeza = 0; movimientoHombroDer = 0, movimientoHombroIzq = 0;
     //Se cargan del fichero los objetos y se guardan
     luz.aplicar();
-    // Apartado C: inicializar los atributos para el control de los grados de libertad del modelo 
 
+
+    std::string ruta = "..\\modelos\\C96.obj";
+    if (utils::cargaOBJ(&ruta[0], pistola.vertices, pistola.texturas, pistola.normales, pistola.triangulos))
+        cargadoCorrectamente = true;
+    else
+        cargadoCorrectamente = false;
+    
 }
 
 igvEscena3D::~igvEscena3D() {
-
 }
 
 ///// Apartado B: M�todos para visualizar cada parte del modelo
 
-void igvEscena3D::visualizarPartes(std::vector<float>& v, std::vector<float>& n, std::vector<unsigned int>& tri, std::vector<float>& tex) {
+void igvEscena3D::visualizarPartes(std::vector<float>& v, std::vector<float>& n, std::vector<unsigned int>& tri) {
     glFlush();
-
-
-
-    /* clear screen */
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_TRIANGLES);
     glShadeModel(GL_SMOOTH);
 
-    //glColor3d(1, 1, 1);
-
+    /* Apartado B: TODO */
     glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-    glBindTexture(GL_TEXTURE_2D, 2);
     glVertexPointer(3, GL_FLOAT, 0, &v[0]);
-    glNormalPointer(GL_FLOAT, 0, &n[0]);
 
-    glTexCoordPointer(4, GL_FLOAT, 3, &tex[0]);
-
-    //TRIANGULOS
     glDrawElements(GL_TRIANGLES, tri.size(), GL_UNSIGNED_INT, &tri[0]);
-
-    // NORMALES
-
-
-    //glDisableClientState(GL_NORMAL_ARRAY);
-
-
-
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
+
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glNormalPointer(GL_FLOAT, 0, &n[0]);
 
 
 }
@@ -74,6 +59,8 @@ void igvEscena3D::visualizarVB(void){
         p2.visualizarSinT(c);
         glColor3f(0.0, 0.0, 1.0);
     glPopMatrix();
+
+
 }
 
 void igvEscena3D::visualizarPuertas(void) {
@@ -88,6 +75,7 @@ void igvEscena3D::visualizarPuertas(void) {
         glTranslatef(25, 5, 0 - Puerta2);
         p2.visualizarConT(c);
     glPopMatrix();
+
 }
 
 ////// Apartado C: a�adir aqu� los m�todos para modificar los grados de libertad del modelo
@@ -130,8 +118,6 @@ void igvEscena3D::paredExterior(int x, int z) {
 
 void igvEscena3D::setPosicionCamara(igvPunto3D _posicion) {
     luz.setPosicion(_posicion);
-    luz.encender();
-    luz.aplicar();
 }
 
 void igvEscena3D::moverPuerta1(){
@@ -146,7 +132,7 @@ void igvEscena3D::moverPuerta2(){
 
 void igvEscena3D::visualizar() {
     glPushMatrix(); // guarda la matriz de modelado
-    luz.aplicar();
+    //luz.aplicar();
     
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glColor3f(1.0, 1.0, 1.0);
@@ -196,8 +182,41 @@ void igvEscena3D::visualizar() {
     c.cargarCubo(PARED2, 50, 4);
     glPopMatrix();
 
-   
+    // PISTOLA
+    glPushMatrix();
+        glTranslatef(x, 2.3, z);     // MUEVE LA POSTOLA AL LADO DE LA CAMARA
+        glRotatef(-angX, 0, 1, 0);   // ROTA LA PISTOLA SEGÚN EL MOVIMIENTO DE RATON
+        glTranslatef(-x, -2.3, -z ); //MUEVE LA PISTOLA AL ORIGEN
+        glTranslatef(x+0.2, 2.3, z);
+        glScalef(0.05,0.05,0.05);
+        glRotatef(180, 0, 1, 0);
+        visualizarPartes(pistola.vertices, pistola.normales, pistola.triangulos); // GENERA MODELO DE LA PISTOLA A PARTIR DEL FICHERO .OBJ
+    glPopMatrix();
+    
+    for (int i = 0; i < balas.size(); i++) {
+        std::vector<float> pos; // SE GUARDAN LAS POSICIONES DE LA BALA
 
+        for (int j = 0; j < 3; j++) { //SE CALCULAN LAS POSICIONES SEGUN LA DIRECCION QUE RECORRE 
+            if (direccion[i][j] < 0) {
+                pos.push_back(balas[i].first[j] - direccion[i][j] * balas[i].second); 
+                balas[i].first[j] = pos[j];
+            }
+            else if (direccion[i][j] == 0) {
+                pos.push_back(balas[i].first[j]);
+            }
+            else if (direccion[i][j] > 0) {
+                pos.push_back(balas[i].first[j] - direccion[i][j] * balas[i].second) ;
+                balas[i].first[j] = pos[j];
+            }
+        }
+
+        glPushMatrix(); 
+            glTranslatef( pos[0], pos[1], pos[2]); // SE MUEVE LA BALA
+            glutSolidSphere(0.1,100,2);
+        glPopMatrix();
+
+
+    }
 
 
     maniqui.dibujar();

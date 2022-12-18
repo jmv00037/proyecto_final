@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "igvInterfaz.h"
+#include <utility>
 
 using namespace std;
 
@@ -78,18 +79,40 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
         interfaz.camara.aplicar();
         interfaz.escena.setPosicionCamara(interfaz.camara.r);
         interfaz.escena.luz.aplicar();
-        
         break;
+    case 'z':
+        (!interfaz.camara.getZoom()) ? interfaz.camara.zoom() : interfaz.camara.revZoom();
+        interfaz.camara.aplicar();
+        break;
+    case 'q': {
+        igvPunto3D s = interfaz.camara.P0 - interfaz.camara.r;
+        s.normalizar();
+        cout << s[X] << ", " << s[Y] << ", " << s[Z] << endl;
+        cout << interfaz.camara.P0[X] << ", " << interfaz.camara.P0[Y] << ", " << interfaz.camara.P0[Z] << endl;
+
+        std::pair<igvPunto3D, float> ret(interfaz.camara.P0, interfaz.dt * 17);  // posicion de la camara y velocidad de movimiento
+        ret.first[X] += 0.2;
+        ret.first[Y] -= 0.25;
+        ret.first[Z] -= 1;
+        interfaz.escena.balas.push_back(ret);
+        interfaz.escena.direccion.push_back(s);
+        break;
+    }
     case 'e':
-        interfaz.escena.moverPuerta1();
+        interfaz.escena.luz.apagar();
+        interfaz.escena.luz.aplicar();
         break;
     case 'r':
-        interfaz.escena.moverPuerta2();
+        interfaz.escena.luz.encender();
+        interfaz.escena.luz.aplicar();
         break;
     case 27: // tecla de escape para SALIR
         exit(1);
         break;
     }
+
+    interfaz.escena.x = interfaz.camara.P0[X];
+    interfaz.escena.z = interfaz.camara.P0[Z];
     glutPostRedisplay(); // renueva el contenido de la ventana de vision
 }
 
@@ -133,17 +156,18 @@ void igvInterfaz::set_glutDisplayFunc() {
         {
             //Puerta 1
             if (interfaz.escena.getPuerta1().getColorByte()[0] == 255 && interfaz.escena.getPuerta1().getColorByte()[1] == 255 && interfaz.escena.getPuerta1().getColorByte()[2] == 0) {
+                //std::cout << "encontrado color amarillo\n";
 
                 interfaz.escena.getPuerta1().setColorByte((float)interfaz.colorPixelGuardado[0] / 255, (float)interfaz.colorPixelGuardado[1] / 255, (float)interfaz.colorPixelGuardado[2] / 255);
                 interfaz.objeto_seleccionado = 1;
             }
             //Puerta 2
             if (interfaz.escena.getPuerta2().getColorByte()[0] == 255 && interfaz.escena.getPuerta2().getColorByte()[1] == 255 && interfaz.escena.getPuerta2().getColorByte()[2] == 0) {
+                //std::cout << "encontrado color amarillo\n";
 
                 interfaz.escena.getPuerta2().setColorByte((float)interfaz.colorPixelGuardado[0] / 255, (float)interfaz.colorPixelGuardado[1] / 255, (float)interfaz.colorPixelGuardado[2] / 255);
                 interfaz.objeto_seleccionado = 1;
             }
-
 
             interfaz.objeto_seleccionado = -1;
         }
@@ -158,7 +182,9 @@ void igvInterfaz::set_glutDisplayFunc() {
         // Apartado A: Obtener el color del pixel seleccionado
         GLubyte colorPixel[3];
         glReadPixels(interfaz.cursorX, interfaz.cursorY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, colorPixel);
-       
+        //std::cout << "\nColor seleccionado caja: " << (float)colorPixel[0] << "," << (float)colorPixel[1] << "," << (float)colorPixel[2] << "\n";
+        //std::cout << "\nColor seleccionado puerta: " << (float)interfaz.escena.getPuerta1().getColorByte()[0] << "," << (float)interfaz.escena.getPuerta1().getColorByte()[1] << "," << (float)interfaz.escena.getPuerta1().getColorByte()[2] << "\n";
+
         // Apartado A: Comprobar el color del objeto que hay en el cursor mirando en la tabla de colores y asigna otro color al objeto seleccionado
 
 
@@ -289,8 +315,11 @@ void igvInterfaz::passiveMouseCB(int x, int y) {
 
     double nuevox = (x - (interfaz.ancho_ventana / 2));
     double nuevoy = ((interfaz.alto_ventana / 2) - y);
+    
+    std::pair<float, float> ang = interfaz.camara.mirar(nuevox, nuevoy, interfaz.dt);
 
-    interfaz.camara.mirar(nuevox, nuevoy, interfaz.dt);
+    interfaz.escena.angX = ang.first;
+    interfaz.escena.angY = ang.second;
 
     interfaz.camara.aplicar();
 
@@ -356,7 +385,7 @@ void igvInterfaz::set_glutMotionFunc(GLint x, GLint y){
     {
         //glRotatef(45, 0, 1, 0);
 
-        
+            //Puerta 1
             if (interfaz.escena.getPuerta1().getColorByte()[0] == 255 && interfaz.escena.getPuerta1().getColorByte()[1] == 255 && interfaz.escena.getPuerta1().getColorByte()[2] == 0) {
                 interfaz.escena.moverPuerta1();
             }
@@ -364,8 +393,6 @@ void igvInterfaz::set_glutMotionFunc(GLint x, GLint y){
             if (interfaz.escena.getPuerta2().getColorByte()[0] == 255 && interfaz.escena.getPuerta2().getColorByte()[1] == 255 && interfaz.escena.getPuerta2().getColorByte()[2] == 0) {
                 interfaz.escena.moverPuerta2();
             }
-
-        
     }
     // Apartado B: guardar la nueva posición del ratón 
 

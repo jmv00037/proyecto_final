@@ -38,13 +38,16 @@ protected:
     // Otros atributos		
     bool ejes;
     // Partes del objeto
-    parte cabeza, brazoIzq, brazoDer, piernaIzq, piernaDer, torso, hombroDer, hombroIzq, piernaSupIzq, piernaSupDer, mundo;
+    parte pistola;
     bool cargadoCorrectamente;
    
     
 
 
 public:
+    std::vector<std::pair<igvPunto3D, float>> balas;  //vector de balas con la posicion y la velocidad
+    std::vector<igvPunto3D> direccion; //vector de la direccion de cada bala
+    float x = 0, z = 0,angX=0,angY=0;
     puerta p1, p2;
     float Puerta1=0, Puerta2 = 0;
     igvFuenteLuz luz;
@@ -57,7 +60,7 @@ public:
     void visualizar(void);
 
     ///// Apartado B: M�todos para visualizar cada parte del modelo
-    void visualizarPartes(std::vector<float>& v, std::vector<float>& n, std::vector<unsigned int>& tri, std::vector<float>& tex);
+    void visualizarPartes(std::vector<float>& v, std::vector<float>& n, std::vector<unsigned int>& tri);
     puerta& getPuerta1() { return p1; }
     puerta& getPuerta2() { return p2; }
     void visualizarVB(void);

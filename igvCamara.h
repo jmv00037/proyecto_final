@@ -63,6 +63,7 @@ public:
     int m_window_Width, m_window_Height;
     float m_angle_H, m_angle_V;
 	// Metodos
+	bool hayZoom = false;
 
 public:
 	// Constructores por defecto y destructor
@@ -88,10 +89,12 @@ public:
 	void aplicar();
 
 
-	void zoom(double factor); // realiza un zoom sobre la c�mara
+	void zoom(); // realiza un zoom sobre la c�mara
+	void revZoom();
     void setPosition(float x, float y, float z);
-    void onKeyBoard(unsigned char key, double dt);
-    bool mirar(double incAlfa, double incBeta, double dt);
+    float onKeyBoard(unsigned char key, double dt);
+	std::pair<float, float> mirar(double incAlfa, double incBeta, double dt);
+	bool getZoom() { return hayZoom; }
 
     /*
 	void set_vista(tipoCamara t) { tipo = t; };

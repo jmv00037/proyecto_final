@@ -24,6 +24,8 @@ public:
 	puerta(const puerta& orig);
 	~puerta();
 
+	void boton(cubo& c);
+
 	//Método para visualizar una caja
 	void visualizarSinT(cubo& c);
 	void visualizarConT(cubo& c);

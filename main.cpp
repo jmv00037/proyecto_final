@@ -1,6 +1,8 @@
 #include <cstdlib>
 
 #include "igvInterfaz.h"
+#include <windows.h>
+#include <mmsystem.h>
 #include <GL\freeglut.h>
 
 // Objetos globales
@@ -16,8 +18,8 @@ int main(int argc, char** argv) {
 	);
 
 
-
-
+	
+	PlaySound(TEXT("1-06. DOOM.wav"), NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
 	// establece las funciones callbacks para la gesti�n de los eventos
 	interfaz.inicializa_callbacks();
 

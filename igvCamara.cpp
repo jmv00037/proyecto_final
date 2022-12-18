@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #include "igvCamara.h"
-
+#include <utility>
 
 
 // Metodos constructores
@@ -91,11 +91,33 @@ void igvCamara::aplicar(void) {
 	gluLookAt(P0[X], P0[Y], P0[Z], r[X], r[Y], r[Z], v[X], v[Y], v[Z]);
 }
 
+void igvCamara::zoom(){
+    if (!hayZoom) {
+        angulo /= 1 + 0.5;
+        xwmin /= 1 + 0.5;
+        ywmin /= 1 + 0.5;
+        xwmax /= 1 + 0.5;
+        ywmax /= 1 + 0.5;
+        hayZoom = true;
+    }
+}
+
+void igvCamara::revZoom(){
+    if (hayZoom) {
+        angulo *= 1 + 0.5;
+        xwmin *= 1 + 0.5;
+        ywmin *= 1 + 0.5;
+        xwmax *= 1 + 0.5;
+        ywmax *= 1 + 0.5;
+        hayZoom = false;
+    }
+}
+
 void igvCamara::setPosition(float x, float y, float z) {
     P0.set(x, y, z);
 }
 
-void igvCamara::onKeyBoard(unsigned char key, double dt) {
+float  igvCamara::onKeyBoard(unsigned char key, double dt) {
     double y1 = P0[Y];
     double y2 = r[Y];
     switch (key) {
@@ -132,14 +154,18 @@ void igvCamara::onKeyBoard(unsigned char key, double dt) {
     }
     P0[Y] = y1;
     r[Y] = y2;
+
+    return m_speed * dt;
 }
 
-bool igvCamara::mirar(double incAlfa, double incBeta, double dt)
+std::pair<float, float> igvCamara::mirar(double incAlfa, double incBeta, double dt)
 {
     rAnterior = r;
     beta += incBeta * mouseSpeed * dt;
     alfa += incAlfa * mouseSpeed * dt;
     
+    std::pair<float, float> ret(alfa,beta);
+
     double dist = sqrt((pow(r[X]-P0[X],2)  + pow(r[Z] - P0[Z], 2)));
     double alfaRad = alfa * M_PI / 180;
     double betaRad = beta * M_PI / 180;
@@ -158,7 +184,9 @@ bool igvCamara::mirar(double incAlfa, double incBeta, double dt)
         beta -= incBeta * mouseSpeed * dt;
         alfa -= incAlfa * mouseSpeed * dt;
         r = rAnterior;
-        return true;
+        return ret;
     }
-    return false;
+
+    
+    return ret;
 }
