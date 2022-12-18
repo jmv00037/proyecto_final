@@ -13,6 +13,9 @@ extern igvInterfaz interfaz; // los callbacks deben ser estaticos y se requiere 
 // Metodos constructores -----------------------------------
 
 igvInterfaz::igvInterfaz() {
+    modo = IGV_VISUALIZAR;
+    objeto_seleccionado = -1;
+    boton_retenido = false;
 }
 
 igvInterfaz::~igvInterfaz() {}
@@ -109,12 +112,90 @@ void igvInterfaz::set_glutDisplayFunc() {
 
 
     // aplica las transformaciones en funci�n de los par�metros de la c�mara
-    interfaz.camara.aplicar();
+    //interfaz.camara.aplicar();
     // visualiza la escena
-    interfaz.escena.visualizar();
+    //interfaz.escena.visualizar();
 
     // refresca la ventana
-    glutSwapBuffers();
+    //glutSwapBuffers();
+    // Apartado A: antes de aplicar las transformaciones de cámara y proyección hay que comprobar el modo para sólo visualizar o seleccionar:
+    if (interfaz.modo == IGV_SELECCIONAR) {
+        // Apartado A: Para que funcione habrá que dibujar la escena sin efectos, sin iluminación, sin texturas ...
+        glDisable(GL_LIGHTING); // desactiva la iluminacion de la escena
+        glDisable(GL_DITHER);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_CULL_FACE);
+
+        // Apartado A: Reestablece los colores como no seleccionado
+        if (interfaz.objeto_seleccionado != -1)
+        {
+            //Puerta 1
+            if (interfaz.escena.getPuerta1().getColorByte()[0] == 255 && interfaz.escena.getPuerta1().getColorByte()[1] == 255 && interfaz.escena.getPuerta1().getColorByte()[2] == 0) {
+
+                interfaz.escena.getPuerta1().setColorByte((float)interfaz.colorPixelGuardado[0] / 255, (float)interfaz.colorPixelGuardado[1] / 255, (float)interfaz.colorPixelGuardado[2] / 255);
+                interfaz.objeto_seleccionado = 1;
+            }
+            //Puerta 2
+            if (interfaz.escena.getPuerta2().getColorByte()[0] == 255 && interfaz.escena.getPuerta2().getColorByte()[1] == 255 && interfaz.escena.getPuerta2().getColorByte()[2] == 0) {
+
+                interfaz.escena.getPuerta2().setColorByte((float)interfaz.colorPixelGuardado[0] / 255, (float)interfaz.colorPixelGuardado[1] / 255, (float)interfaz.colorPixelGuardado[2] / 255);
+                interfaz.objeto_seleccionado = 1;
+            }
+
+
+            interfaz.objeto_seleccionado = -1;
+        }
+
+
+        // Apartado A: aplica la cámara
+        interfaz.camara.aplicar();
+
+        // Apartado A: visualiza los BV cada uno de un color
+        interfaz.escena.visualizarVB();
+
+        // Apartado A: Obtener el color del pixel seleccionado
+        GLubyte colorPixel[3];
+        glReadPixels(interfaz.cursorX, interfaz.cursorY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, colorPixel);
+       
+        // Apartado A: Comprobar el color del objeto que hay en el cursor mirando en la tabla de colores y asigna otro color al objeto seleccionado
+
+
+        //cout << interfaz.escena.getCajas().size() << "je\n";
+
+        if (colorPixel[0] == 0 && colorPixel[1] != 0  && 0 == colorPixel[2]) {
+            interfaz.colorPixelGuardado[0] = colorPixel[0];
+            interfaz.colorPixelGuardado[1] = colorPixel[1];
+            interfaz.colorPixelGuardado[2] = colorPixel[2];
+            interfaz.escena.getPuerta2().setColorByte(255 / 255, 255 / 255, 0 / 255);
+            interfaz.objeto_seleccionado = 1;
+        }
+
+        if (colorPixel[0] != 0 && colorPixel[1] != 0 && 0 != colorPixel[2]) {
+            interfaz.colorPixelGuardado[0] = colorPixel[0];
+            interfaz.colorPixelGuardado[1] = colorPixel[1];
+            interfaz.colorPixelGuardado[2] = colorPixel[2];
+            interfaz.escena.getPuerta1().setColorByte(255 / 255, 255 / 255, 0 / 255);
+            interfaz.objeto_seleccionado = 1;
+        }
+
+        glutPostRedisplay();
+        // Apartado A: Cambiar a modo de visualización de la escena
+        interfaz.modo = IGV_VISUALIZAR;
+        
+        // Apartado A: Habilitar de nuevo la iluminación
+        glEnable(GL_LIGHTING);
+    }
+    else {
+        // aplica las transformaciones en función de los parámetros de la cámara
+        interfaz.camara.aplicar();
+        // visualiza la escena
+        interfaz.escena.visualizar();
+
+        // refresca la ventana
+        glutSwapBuffers();
+    }
 }
 
 void igvInterfaz::set_glutIdleFunc() {
@@ -180,7 +261,7 @@ void igvInterfaz::set_glutIdleFunc() {
         }
         //MOVIMIENTO ROBOT
         
-        cout << interfaz.movimientoRobot << endl;
+        //cout << interfaz.movimientoRobot << endl;
         if (interfaz.movimientoRobot == STOP) {
             interfaz.atras = true;
             interfaz.escena.maniqui.girar();
@@ -222,6 +303,8 @@ void igvInterfaz::inicializa_callbacks() {
     glutReshapeFunc(set_glutReshapeFunc);
     glutDisplayFunc(set_glutDisplayFunc);
     glutIdleFunc(set_glutIdleFunc);
+    glutMouseFunc(set_glutMouseFunc);
+    glutMotionFunc(set_glutMotionFunc);
     glutTimerFunc(1000 / FPS, loop, 0);//espera un numero de milisegundos para que vaya fluido
 }
 
@@ -234,5 +317,59 @@ void igvInterfaz::loop(int)
     glutPostRedisplay();
     glutTimerFunc(1000 / FPS, loop, 0);
 
+}
+
+void igvInterfaz::set_glutMouseFunc(GLint boton, GLint estado, GLint x, GLint y){
+    // Apartado A: comprobar que se ha pulsado el botón izquierdo 
+
+
+    if (boton == GLUT_LEFT_BUTTON)
+    {
+        if (estado == GLUT_DOWN) {
+            interfaz.cursorX = x;
+            interfaz.cursorY = interfaz.alto_ventana - y;
+            interfaz.modo = IGV_SELECCIONAR;
+        }
+
+
+    }
+    // Apartado A: guardar que el boton se ha presionado o se ha soltado, si se ha pulsado hay que
+    // pasar a modo IGV_SELECCIONAR
+
+    // Apartado A: guardar el pixel pulsado
+
+    // Apartado A: renovar el contenido de la ventana de vision 
+//interfaz.modo = IGV_VISUALIZAR;
+    glutPostRedisplay();
+}
+
+void igvInterfaz::set_glutMotionFunc(GLint x, GLint y){
+    // Apartado B: si el botón está retenido y hay algún objeto seleccionado,
+ // comprobar el objeto seleccionado y la posición del ratón y rotar
+ // el objeto seleccionado utilziando el desplazamiento entre la posición 
+ //inicial y final del ratón
+
+ //cout << "antres " << interfaz.objeto_seleccionado << "\n";
+ //cout << "antres 2" << interfaz.boton_retenido << "\n";
+
+    if (interfaz.boton_retenido == false && interfaz.objeto_seleccionado == 1)
+    {
+        //glRotatef(45, 0, 1, 0);
+
+        
+            if (interfaz.escena.getPuerta1().getColorByte()[0] == 255 && interfaz.escena.getPuerta1().getColorByte()[1] == 255 && interfaz.escena.getPuerta1().getColorByte()[2] == 0) {
+                interfaz.escena.moverPuerta1();
+            }
+            //Puerta 2
+            if (interfaz.escena.getPuerta2().getColorByte()[0] == 255 && interfaz.escena.getPuerta2().getColorByte()[1] == 255 && interfaz.escena.getPuerta2().getColorByte()[2] == 0) {
+                interfaz.escena.moverPuerta2();
+            }
+
+        
+    }
+    // Apartado B: guardar la nueva posición del ratón 
+
+    // Apartado B: renovar el contenido de la ventana de vision 
+    glutPostRedisplay();
 }
 

@@ -19,7 +19,6 @@ cubo::~cubo(){
 
 void cubo::dibujar(float sx, float sy, float sz, unsigned int lugar, unsigned int repetirX, unsigned int repetiY)
 {
-    glColor3d(1, 1, 1);
      
     int i, j;
     for (i = 0; i < 6; i++)
@@ -68,4 +67,8 @@ void cubo::aplicarTexturas(unsigned int x){
 void cubo::cargarCubo(unsigned int x, unsigned int repetirX, unsigned int repetiY){
     aplicarTexturas(x);
     dibujar(1, 1, 1, x, repetirX,repetiY);
+}
+
+void cubo::sint(unsigned int x, unsigned int repetirX, unsigned int repetiY) {
+    dibujar(1, 1, 1, x, repetirX, repetiY);
 }

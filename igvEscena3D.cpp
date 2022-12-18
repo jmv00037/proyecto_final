@@ -8,11 +8,10 @@
 
 // Metodos constructores 
 
-igvEscena3D::igvEscena3D():luz(GL_LIGHT1, igvPunto3D(0, 5, 0), igvColor(1, 1, 1, 1), igvColor(0,0,0,0), igvColor(1, 1, 1, 1), 1, 0, 0, igvPunto3D(-1, -1, 0), 50, 0), maniqui(igvPunto3D(-40,5,-40),&c) {
+igvEscena3D::igvEscena3D():luz(GL_LIGHT1, igvPunto3D(0, 5, 0), igvColor(1, 1, 1, 1), igvColor(0,0,0,0), igvColor(1, 1, 1, 1), 1, 0, 0, igvPunto3D(-1, -1, 0), 50, 0), maniqui(igvPunto3D(-40,5,-40),&c), p1(0.0,1.0,0.0), p2(0.0,0.0,1.0) {
     ejes = true;
     movimientoCabeza = 0; movimientoHombroDer = 0, movimientoHombroIzq = 0;
     //Se cargan del fichero los objetos y se guardan
-    
     luz.aplicar();
     // Apartado C: inicializar los atributos para el control de los grados de libertad del modelo 
 
@@ -20,32 +19,6 @@ igvEscena3D::igvEscena3D():luz(GL_LIGHT1, igvPunto3D(0, 5, 0), igvColor(1, 1, 1,
 
 igvEscena3D::~igvEscena3D() {
 
-}
-
-// Metodos publicos 
-
-void pintar_ejes(void) {
-    GLfloat rojo[] = { 1,0,0,1.0 };
-    GLfloat verde[] = { 0,1,0,1.0 };
-    GLfloat azul[] = { 0,0,1,1.0 };
-
-    glMaterialfv(GL_FRONT, GL_EMISSION, rojo);
-    glBegin(GL_LINES);
-    glVertex3f(1000, 0, 0);
-    glVertex3f(-1000, 0, 0);
-    glEnd();
-
-    glMaterialfv(GL_FRONT, GL_EMISSION, verde);
-    glBegin(GL_LINES);
-    glVertex3f(0, 1000, 0);
-    glVertex3f(0, -1000, 0);
-    glEnd();
-
-    glMaterialfv(GL_FRONT, GL_EMISSION, azul);
-    glBegin(GL_LINES);
-    glVertex3f(0, 0, 1000);
-    glVertex3f(0, 0, -1000);
-    glEnd();
 }
 
 ///// Apartado B: M�todos para visualizar cada parte del modelo
@@ -87,6 +60,34 @@ void igvEscena3D::visualizarPartes(std::vector<float>& v, std::vector<float>& n,
     glDisableClientState(GL_VERTEX_ARRAY);
 
 
+}
+
+void igvEscena3D::visualizarVB(void){
+    glPushMatrix();//Crea puerta
+        glTranslatef(-25, 5, 0 + Puerta1);
+        p1.visualizarSinT(c);
+        glColor3f(0.0,1.0,0.0);
+    glPopMatrix();
+
+    glPushMatrix();//Crea puerta
+        glTranslatef(25, 5, 0 - Puerta2);
+        p2.visualizarSinT(c);
+        glColor3f(0.0, 0.0, 1.0);
+    glPopMatrix();
+}
+
+void igvEscena3D::visualizarPuertas(void) {
+    glColor3f(1.0, 1.0, 1.0);
+
+    glPushMatrix();//Crea puerta
+        glTranslatef(-25, 5, 0 + Puerta1);
+        p1.visualizarConT(c);
+    glPopMatrix();
+
+    glPushMatrix();//Crea puerta
+        glTranslatef(25, 5, 0 - Puerta2);
+        p2.visualizarConT(c);
+    glPopMatrix();
 }
 
 ////// Apartado C: a�adir aqu� los m�todos para modificar los grados de libertad del modelo
@@ -145,10 +146,10 @@ void igvEscena3D::moverPuerta2(){
 
 void igvEscena3D::visualizar() {
     glPushMatrix(); // guarda la matriz de modelado
-    
     luz.aplicar();
     
     glClearColor(0.0, 0.0, 0.0, 0.0);
+    glColor3f(1.0, 1.0, 1.0);
 
     glPushMatrix(); //Crea el techo
     glTranslatef(0, 10, 0);
@@ -195,17 +196,7 @@ void igvEscena3D::visualizar() {
     c.cargarCubo(PARED2, 50, 4);
     glPopMatrix();
 
-    glPushMatrix();//Crea puerta
-    glTranslatef(-25, 5, 0 + Puerta1);
-    glScalef(0.9, 4, 5);
-    c.cargarCubo(PUERTA, 1, 1);
-    glPopMatrix();
-
-    glPushMatrix();//Crea puerta
-    glTranslatef(25, 5, 0 - Puerta2);
-    glScalef(0.9, 4, 5);
-    c.cargarCubo(PUERTA, 1, 1);
-    glPopMatrix();
+   
 
 
 
@@ -213,6 +204,10 @@ void igvEscena3D::visualizar() {
 
 
     glPopMatrix(); // restaura la matriz de modelado
+
+    glPushMatrix();
+        visualizarPuertas();
+    glPopMatrix();
 
 }
 

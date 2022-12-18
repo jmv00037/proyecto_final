@@ -10,10 +10,10 @@
 #endif
 
 #include "utils.h"
-
+#
 #include "igvFuenteLuz.h"
 #include "robot.h"
-#include "cubo.h"
+#include "puerta.h"
 
 struct parte {
     std::vector<float> vertices;
@@ -45,6 +45,7 @@ protected:
 
 
 public:
+    puerta p1, p2;
     float Puerta1=0, Puerta2 = 0;
     igvFuenteLuz luz;
     robot maniqui;
@@ -57,6 +58,9 @@ public:
 
     ///// Apartado B: M�todos para visualizar cada parte del modelo
     void visualizarPartes(std::vector<float>& v, std::vector<float>& n, std::vector<unsigned int>& tri, std::vector<float>& tex);
+    puerta& getPuerta1() { return p1; }
+    puerta& getPuerta2() { return p2; }
+    void visualizarVB(void);
 
     ////// Apartado C: a�adir aqu� los m�todos para modificar los grados de libertad del modelo
     float restriccion(float angle, int min, int max, float& mov);
@@ -86,7 +90,7 @@ public:
     void setPosicionCamara(igvPunto3D _posicion);
     void moverPuerta1();
     void moverPuerta2();
-
+    void visualizarPuertas(void);
 };
 
 #endif
