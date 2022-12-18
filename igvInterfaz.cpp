@@ -91,11 +91,10 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
         cout << interfaz.camara.P0[X] << ", " << interfaz.camara.P0[Y] << ", " << interfaz.camara.P0[Z] << endl;
 
         std::pair<igvPunto3D, float> ret(interfaz.camara.P0, interfaz.dt * 17);  // posicion de la camara y velocidad de movimiento
-        ret.first[X] += 0.2;
-        ret.first[Y] -= 0.25;
-        ret.first[Z] -= 1;
+        
         interfaz.escena.balas.push_back(ret);
         interfaz.escena.direccion.push_back(s);
+        interfaz.escena.destruirBalas.push_back(0);
         break;
     }
     case 'e':

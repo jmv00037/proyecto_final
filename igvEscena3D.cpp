@@ -6,6 +6,8 @@
 #include "igvInterfaz.h"
 #include "igvCamara.h"
 
+#define MAXIMA_DISTANCIA 100
+
 // Metodos constructores 
 
 igvEscena3D::igvEscena3D():luz(GL_LIGHT0, igvPunto3D(1.0, 1.0, 1.0), igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.0), double(0.0)), maniqui(igvPunto3D(-40,5,-40),&c), p1(0.0,1.0,0.0), p2(0.0,0.0,1.0){
@@ -214,7 +216,11 @@ void igvEscena3D::visualizar() {
             glTranslatef( pos[0], pos[1], pos[2]); // SE MUEVE LA BALA
             glutSolidSphere(0.1,100,2);
         glPopMatrix();
-
+        if (++destruirBalas[i] == MAXIMA_DISTANCIA) {
+            destruirBalas.erase(destruirBalas.begin());
+            balas.erase(balas.begin());
+            direccion.erase(direccion.begin());
+        }
 
     }
 

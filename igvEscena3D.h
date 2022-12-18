@@ -45,6 +45,7 @@ protected:
 
 
 public:
+    std::vector<unsigned int> destruirBalas;
     std::vector<std::pair<igvPunto3D, float>> balas;  //vector de balas con la posicion y la velocidad
     std::vector<igvPunto3D> direccion; //vector de la direccion de cada bala
     float x = 0, z = 0,angX=0,angY=0;

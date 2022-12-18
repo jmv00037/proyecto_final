@@ -122,12 +122,12 @@ float  igvCamara::onKeyBoard(unsigned char key, double dt) {
     double y2 = r[Y];
     switch (key) {
         case 'w':
-            {                igvPunto3D dir;
+            {    
+                igvPunto3D dir;
                 dir = r - P0;
                 dir.normalizar();
                 P0 += dir * (m_speed * dt);
                 r += dir * (m_speed * dt);
-                
             break;
             }
         case 's':{
