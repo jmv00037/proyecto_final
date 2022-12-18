@@ -1,7 +1,8 @@
-
 #define FPS 60
+#define STOP 1500
 
 #include <cstdlib>
+#include <iostream>
 #include "igvInterfaz.h"
 
 using namespace std;
@@ -12,7 +13,6 @@ extern igvInterfaz interfaz; // los callbacks deben ser estaticos y se requiere 
 // Metodos constructores -----------------------------------
 
 igvInterfaz::igvInterfaz() {
-
 }
 
 igvInterfaz::~igvInterfaz() {}
@@ -65,10 +65,8 @@ void Timer(int iUnused) {
 }
 
 void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
-
+    int velocidad = 40;
     switch (key) {
-        ////// Apartado C: incluir aqu� el cambio de la c�mara para mostrar las vistas planta, perfil, alzado o perspectiva 
-        ////// Apartado C: incluir aqu� la modificaci�n de los grados de libertad del modelo pulsando las teclas correspondientes
     case 'a':
     case 'd':
     case 'w':
@@ -78,9 +76,6 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
         interfaz.escena.setPosicionCamara(interfaz.camara.r);
         interfaz.escena.luz.aplicar();
         
-        break;
-    case 'e': // activa/desactiva la visualizacion de los ejes
-        interfaz.escena.set_ejes(interfaz.escena.get_ejes() ? false : true);
         break;
     case 27: // tecla de escape para SALIR
         exit(1);
@@ -117,31 +112,90 @@ void igvInterfaz::set_glutDisplayFunc() {
 }
 
 void igvInterfaz::set_glutIdleFunc() {
-    ///// Apartado D: incluir el c�digo para animar el modelo de la manera m�s realista posible
+    int velocidad = 1;
 
-    if (interfaz.animacion) {
-
-        if (interfaz.angCabeza == interfaz.escena.getMaxCabeza() || interfaz.angCabeza == interfaz.escena.getMinCabeza()) {
+    if(interfaz.animacion) {
+        if(interfaz.angCabeza==interfaz.escena.getMaxCabeza() || interfaz.angCabeza==interfaz.escena.getMinCabeza()){
             interfaz.cambiarCabeza = !interfaz.cambiarCabeza;
         }
-        if (interfaz.cambiarCabeza) {
+        if(interfaz.cambiarCabeza) {
             interfaz.angCabeza += interfaz.deltaX;
             interfaz.angCabeza = interfaz.escena.moverCabeza(interfaz.angCabeza);
             interfaz.escena.moverPiernaDer(interfaz.angCabeza);
             interfaz.escena.moverPiernaIzq(-interfaz.angCabeza);
-            interfaz.escena.moverHombroDer(interfaz.angCabeza - 90);
-            interfaz.escena.moverHombroIzq(-interfaz.angCabeza - 90);
-        }
-        else {
+            interfaz.escena.moverHombroDer(interfaz.angCabeza-90);
+            interfaz.escena.moverHombroIzq(-interfaz.angCabeza-90);
+        }else{
             interfaz.angCabeza -= interfaz.deltaX;
             interfaz.angCabeza = interfaz.escena.moverCabeza(interfaz.angCabeza);
             interfaz.escena.moverPiernaDer(interfaz.angCabeza);
             interfaz.escena.moverPiernaIzq(-interfaz.angCabeza);
-            interfaz.escena.moverHombroDer(interfaz.angCabeza - 90);
-            interfaz.escena.moverHombroIzq(-interfaz.angCabeza - 90);
+            interfaz.escena.moverHombroDer(interfaz.angCabeza-90);
+            interfaz.escena.moverHombroIzq(-interfaz.angCabeza-90);
         }
-        glutPostRedisplay();
     }
+   
+    
+
+        if (interfaz.movimiento1 == false) {
+            if (interfaz.escena.maniqui.get_rotacionHombro2X() < 40) {
+                interfaz.escena.maniqui.set_rotacionHombro2X(interfaz.escena.maniqui.get_rotacionHombro2X() + velocidad);
+            }
+            if (interfaz.escena.maniqui.get_rotacionHombro1X() > -40) {
+                interfaz.escena.maniqui.set_rotacionHombro1X(interfaz.escena.maniqui.get_rotacionHombro1X() - velocidad);
+            }
+            if (interfaz.escena.maniqui.get_rotacionPierna2() < 40) {
+                interfaz.escena.maniqui.set_rotacionPierna2(interfaz.escena.maniqui.get_rotacionPierna2() + velocidad);
+            }
+            if (interfaz.escena.maniqui.get_rotacionPierna1() > -40) {
+                interfaz.escena.maniqui.set_rotacionPierna1(interfaz.escena.maniqui.get_rotacionPierna1() - velocidad);
+            }
+            else {
+                interfaz.movimiento1 = true;
+            }
+
+        }
+        else {
+            if (interfaz.escena.maniqui.get_rotacionHombro2X() > -40) {
+                interfaz.escena.maniqui.set_rotacionHombro2X(interfaz.escena.maniqui.get_rotacionHombro2X() - velocidad);
+            }
+            if (interfaz.escena.maniqui.get_rotacionHombro1X() < 40) {
+                interfaz.escena.maniqui.set_rotacionHombro1X(interfaz.escena.maniqui.get_rotacionHombro1X() + velocidad);
+            }
+            if (interfaz.escena.maniqui.get_rotacionPierna2() > -40) {
+                interfaz.escena.maniqui.set_rotacionPierna2(interfaz.escena.maniqui.get_rotacionPierna2() - velocidad);
+            }
+            if (interfaz.escena.maniqui.get_rotacionPierna1() < 40) {
+                interfaz.escena.maniqui.set_rotacionPierna1(interfaz.escena.maniqui.get_rotacionPierna1() + velocidad);
+            }
+            else {
+                interfaz.movimiento1 = false;
+            }
+        }
+        //MOVIMIENTO ROBOT
+        
+        cout << interfaz.movimientoRobot << endl;
+        if (interfaz.movimientoRobot == STOP) {
+            interfaz.atras = true;
+            interfaz.escena.maniqui.girar();
+        }
+        if (interfaz.movimientoRobot == 0) {
+            interfaz.atras = false;
+            interfaz.escena.maniqui.girar();
+        }
+
+        if (interfaz.atras) {
+            interfaz.movimientoRobot--;
+            interfaz.escena.maniqui.moverAtras();
+        }
+        else {
+            interfaz.movimientoRobot++;
+            interfaz.escena.maniqui.moverAdelante();
+        }
+
+
+        glutPostRedisplay();
+    
 }
 
 void igvInterfaz::passiveMouseCB(int x, int y) {

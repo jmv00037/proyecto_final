@@ -25,12 +25,13 @@ protected:
 	igvEscena3D escena; // escena que se visualiza en la ventana definida por igvInterfaz
 	igvCamara camara; // c�mara que se utiliza para visualizar la escena
     igvCamara* actual = nullptr;
-
-    //movimientos con teclas
-    float incrementoMov=5,hombroDer=0,hombroIzq=0,cabeza=0,torso=0,piernaDer=0,piernaIzq=0;
+	
     //animacion
-    float deltaX=1,angCabeza=0,angPierna=0,angBrazos=0;
-    bool animacion=false,cambiarCabeza=false,cambiarPiernas=false,cambiarBrazos=false;
+	float deltaX = 1, angCabeza = 0, angPierna = 0, angBrazos = 0;
+	bool animacion = false, cambiarCabeza = false, cambiarPiernas = false, cambiarBrazos = false;
+	bool animacion2 = true;
+	bool movimiento1 = false, atras=false;
+	int movimientoRobot = 0;
 
     ///PRUEBA
     double dt;

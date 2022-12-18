@@ -15,6 +15,7 @@
 #define PARED 2
 #define PARED2 3
 #define PUERTA 4
+#define TORSO 5
 
 namespace utils{
 

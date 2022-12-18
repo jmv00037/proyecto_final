@@ -12,7 +12,7 @@
 #include "utils.h"
 
 #include "igvFuenteLuz.h"
-
+#include "robot.h"
 #include "cubo.h"
 
 struct parte {
@@ -41,9 +41,12 @@ protected:
     parte cabeza, brazoIzq, brazoDer, piernaIzq, piernaDer, torso, hombroDer, hombroIzq, piernaSupIzq, piernaSupDer, mundo;
     bool cargadoCorrectamente;
    
+    
+
 
 public:
     igvFuenteLuz luz;
+    robot maniqui;
     // Constructores por defecto y destructor
     igvEscena3D();
     ~igvEscena3D();

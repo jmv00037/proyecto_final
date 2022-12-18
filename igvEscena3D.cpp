@@ -8,39 +8,12 @@
 
 // Metodos constructores 
 
-igvEscena3D::igvEscena3D():luz(GL_LIGHT1, igvPunto3D(0, 5, 0), igvColor(1, 1, 1, 1), igvColor(0,0,0,0), igvColor(1, 1, 1, 1), 1, 0, 0, igvPunto3D(-1, -1, 0), 50, 0) {
+igvEscena3D::igvEscena3D():luz(GL_LIGHT1, igvPunto3D(0, 5, 0), igvColor(1, 1, 1, 1), igvColor(0,0,0,0), igvColor(1, 1, 1, 1), 1, 0, 0, igvPunto3D(-1, -1, 0), 50, 0), maniqui(igvPunto3D(-40,5,-40)) {
     ejes = true;
     movimientoCabeza = 0; movimientoHombroDer = 0, movimientoHombroIzq = 0;
     //Se cargan del fichero los objetos y se guardan
     
     luz.aplicar();
-
-    std::string ruta = "..\\modelos\\";
-
-
-    std::string pCabeza = ruta + "cabeza.obj";
-    std::string pTorso = ruta + "untitled.obj";
-    std::string pBrazoIzq = ruta + "brazoIzq.obj";
-    std::string pBrazoDer = ruta + "brazoDer.obj";
-    std::string pPiernaIzq = ruta + "piernaIzq.obj";
-    std::string pPiernaDer = ruta + "piernaDer.obj";
-    std::string pHombroIzq = ruta + "hombroIzq.obj";
-    std::string pHombroDer = ruta + "hombroDer.obj";
-    std::string pPiernaSupIzq = ruta + "piernaSuperiorIzq.obj";
-    std::string pPiernaSupDer = ruta + "piernaSuperiorDer.obj";
-    if (utils::cargaOBJ(&pCabeza[0], cabeza.vertices, cabeza.texturas, cabeza.normales, cabeza.triangulos) &&
-        utils::cargaOBJ(&pTorso[0], torso.vertices, torso.texturas, torso.normales, torso.triangulos) &&
-        utils::cargaOBJ(&pBrazoIzq[0], brazoIzq.vertices, brazoIzq.texturas, brazoIzq.normales, brazoIzq.triangulos) &&
-        utils::cargaOBJ(&pBrazoDer[0], brazoDer.vertices, brazoDer.texturas, brazoDer.normales, brazoDer.triangulos) &&
-        utils::cargaOBJ(&pPiernaIzq[0], piernaIzq.vertices, piernaIzq.texturas, piernaIzq.normales, piernaIzq.triangulos) &&
-        utils::cargaOBJ(&pPiernaDer[0], piernaDer.vertices, piernaDer.texturas, piernaDer.normales, piernaDer.triangulos) &&
-        utils::cargaOBJ(&pHombroIzq[0], hombroIzq.vertices, hombroIzq.texturas, hombroIzq.normales, hombroIzq.triangulos) &&
-        utils::cargaOBJ(&pHombroDer[0], hombroDer.vertices, hombroDer.texturas, hombroDer.normales, hombroDer.triangulos) &&
-        utils::cargaOBJ(&pPiernaSupIzq[0], piernaSupIzq.vertices, piernaSupIzq.texturas, piernaSupIzq.normales, piernaSupIzq.triangulos) &&
-        utils::cargaOBJ(&pPiernaSupDer[0], piernaSupDer.vertices, piernaSupDer.texturas, piernaSupDer.normales, piernaSupDer.triangulos))
-        cargadoCorrectamente = true;
-    else
-        cargadoCorrectamente = false;
     // Apartado C: inicializar los atributos para el control de los grados de libertad del modelo 
 
 }
@@ -161,29 +134,16 @@ void igvEscena3D::setPosicionCamara(igvPunto3D _posicion) {
 }
 
 void igvEscena3D::visualizar() {
-    //GLfloat luz0[4] = { 5.0,5.0,5.0,1 }; // luz puntual  
-    //glLightfv(GL_LIGHT0, GL_POSITION, luz0); // la luz se coloca aqu� si permanece fija y no se mueve con la escena
-    //glEnable(GL_LIGHT0);
-
-
     glPushMatrix(); // guarda la matriz de modelado
     
-    //igvFuenteLuz luzPuntual(GL_LIGHT0, posicionCamara, igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.0), double(0.0));
-    //luzPuntual.aplicar();
-    
-    
-    
     luz.aplicar();
-    
-    
-    //glLightfv(GL_LIGHT0,GL_POSITION,luz0); // la luz se coloca aqu� si se mueve junto con la escena (tambi�n habr�a que desactivar la de arriba).
     
     glClearColor(0.0, 0.0, 0.0, 0.0);
 
     glPushMatrix(); //Crea el techo
     glTranslatef(0, 10, 0);
-    glScalef(50, 1, 50); // expande el suelo
-    c.cargarCubo(SUELO, 50, 50); //crea el cubo para el suelo
+    glScalef(50, 1, 50); // expande el techo
+    c.cargarCubo(SUELO, 50, 50); //crea el cubo para el techo
     glPopMatrix();
     glPushMatrix(); //Crea el suelo
     glScalef(50, 1, 50); // expande el suelo
@@ -237,65 +197,11 @@ void igvEscena3D::visualizar() {
     c.cargarCubo(PUERTA, 1, 1);
     glPopMatrix();
 
-    float color_paredes[3] = { 40 / 255.0, 40 / 255.0, 40 / 255.0 };
 
-    /*
-    if(cargadoCorrectamente){
-        glPushMatrix();
-            glRotated(movimientoTorso,0,1,0);
-            visualizarPartes(torso.vertices,torso.normales,torso.triangulos,torso.texturas);
-            //CABEZA
-            glPushMatrix();
-                glRotated(movimientoCabeza,0,1,0);
-                visualizarPartes(cabeza.vertices,cabeza.normales,cabeza.triangulos,cabeza.texturas);
-            glPopMatrix();
-            //HOMBRO IZQUIERDO
-            glPushMatrix();
-                glTranslatef(-0.179,1.88,1.03);
-                glRotated(movimientoHombroIzq,0,0,1);
-                glTranslatef(0.179,-1.88,-1.03);
-                visualizarPartes(hombroIzq.vertices,hombroIzq.normales,hombroIzq.triangulos,hombroIzq.texturas);
-                //BRAZO IZQUIERDO
-                glPushMatrix();
-                    visualizarPartes(brazoIzq.vertices,brazoIzq.normales,brazoIzq.triangulos,brazoIzq.texturas);
-                glPopMatrix();
-            glPopMatrix();
-            //HOMBRO DERECHO
-            glPushMatrix();
-                glTranslatef(-0.112,1.88,-1.25);
-                glRotated(movimientoHombroDer,0,0,1);
-                glTranslatef(0.112,-1.88,1.25);
-                visualizarPartes(hombroDer.vertices,hombroDer.normales,hombroDer.triangulos,hombroDer.texturas);
-                //BRAZO DERECHO
-                glPushMatrix();
-                    visualizarPartes(brazoDer.vertices,brazoDer.normales,brazoDer.triangulos,brazoDer.texturas);
-                glPopMatrix();
-            glPopMatrix();
-            //PARTE SUPERIOR DE LA PIERNA DERECHA
-            glPushMatrix();
-                glTranslatef(-0.00468,-0.3,-0.544);
-                glRotated(movimientoPiernaDer,0,0,1);
-                glTranslatef(0.00468,0.3,0.544);
-                visualizarPartes(piernaSupDer.vertices,piernaSupDer.normales,piernaSupDer.triangulos,piernaSupDer.texturas);
-                //PIERNA DERECHA
-                glPushMatrix();
-                    visualizarPartes(piernaDer.vertices,piernaDer.normales,piernaDer.triangulos,piernaDer.texturas);
-                glPopMatrix();
-            glPopMatrix();
-            //PARTE SUPERIOR DE LA PIERNA IZQUIERDA
-            glPushMatrix();
-                glTranslatef(-0.00468,-0.3,-0.544);
-                glRotated(movimientoPiernaIzq,0,0,1);
-                glTranslatef(0.00468,0.3,0.544);
-                visualizarPartes(piernaSupIzq.vertices,piernaSupIzq.normales,piernaSupIzq.triangulos,piernaSupIzq.texturas);
-                //PIERNA IZQUIERDA
-                glPushMatrix();
-                    visualizarPartes(piernaIzq.vertices,piernaIzq.normales,piernaIzq.triangulos,piernaIzq.texturas);
-                glPopMatrix();
-            glPopMatrix();
 
-        glPopMatrix();
-    }*/
+    maniqui.dibujar();
+
+
     glPopMatrix(); // restaura la matriz de modelado
 
 }
