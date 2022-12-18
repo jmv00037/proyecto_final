@@ -1,6 +1,4 @@
 #include "cubo.h"
-#include "utils.h"
-
 
 
 cubo::cubo(){
@@ -8,6 +6,7 @@ cubo::cubo(){
     texturaPared = utils::LoadTexture(PARED, "paredes.bmp", 128, 128);
     texturaPared2 = utils::LoadTexture(PARED2, "wall.bmp", 64, 64);
     puerta = utils::LoadTexture(PUERTA, "puerta.bmp", 64, 64);
+    torso = utils::LoadTexture(TORSO, "torso.bmp", 185, 185);
 }
 
 cubo::~cubo(){
@@ -15,14 +14,13 @@ cubo::~cubo(){
     free(texturaPared);
     free(texturaPared2);
     free(puerta);
+    free(torso);
 }
 
 void cubo::dibujar(float sx, float sy, float sz, unsigned int lugar, unsigned int repetirX, unsigned int repetiY)
 {
     glColor3d(1, 1, 1);
      
-    
-
     int i, j;
     for (i = 0; i < 6; i++)
     {        
@@ -51,6 +49,9 @@ void cubo::aplicarTexturas(unsigned int x){
         break;
     case PUERTA:
         gluBuild2DMipmaps(GL_TEXTURE_2D, 3, 64, 64, GL_RGB, GL_UNSIGNED_BYTE, puerta);
+        break;
+    case TORSO:
+        gluBuild2DMipmaps(GL_TEXTURE_2D, 3, 185, 185, GL_RGB, GL_UNSIGNED_BYTE, torso);
         break;
     default:
         break;

@@ -77,6 +77,12 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
         interfaz.escena.luz.aplicar();
         
         break;
+    case 'e':
+        interfaz.escena.moverPuerta1();
+        break;
+    case 'r':
+        interfaz.escena.moverPuerta2();
+        break;
     case 27: // tecla de escape para SALIR
         exit(1);
         break;

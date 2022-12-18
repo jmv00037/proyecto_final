@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdlib>
-
+#include "utils.h"
 #include <GL\freeglut.h>
 
 #include <stdio.h>
@@ -16,6 +16,7 @@ private:
 	unsigned char* texturaPared;
 	unsigned char* texturaPared2;
 	unsigned char* puerta;
+	unsigned char* torso;
 
 	float textures[6][4][2] =
 	{

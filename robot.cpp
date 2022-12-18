@@ -5,10 +5,10 @@
 
 
 
-robot::robot(igvPunto3D posicionRobot_) {
+robot::robot(igvPunto3D posicionRobot_, cubo* c_) {
 
 	posicionRobot = posicionRobot_;
-	
+	c = c_;
 
 	rotacionBaseX = 0;
 	rotacionBaseY = 180;
@@ -27,6 +27,10 @@ robot::robot(igvPunto3D posicionRobot_) {
 
 }
 
+robot::~robot() {
+	c = nullptr;
+}
+
 void robot::dibujar(){
 
 
@@ -36,7 +40,8 @@ void robot::dibujar(){
 	glRotated(rotacionBaseZ, 0, 0, 1);
 	glPushMatrix(); //base
 	glMaterialfv(GL_FRONT, GL_EMISSION, color_pieza3);//base
-	glutSolidCube(2);//base
+	c->cargarCubo(TORSO, 1,1);
+	//glutSolidCube(2);//base
 
 	//----------------------
 

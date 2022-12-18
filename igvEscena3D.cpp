@@ -8,7 +8,7 @@
 
 // Metodos constructores 
 
-igvEscena3D::igvEscena3D():luz(GL_LIGHT1, igvPunto3D(0, 5, 0), igvColor(1, 1, 1, 1), igvColor(0,0,0,0), igvColor(1, 1, 1, 1), 1, 0, 0, igvPunto3D(-1, -1, 0), 50, 0), maniqui(igvPunto3D(-40,5,-40)) {
+igvEscena3D::igvEscena3D():luz(GL_LIGHT1, igvPunto3D(0, 5, 0), igvColor(1, 1, 1, 1), igvColor(0,0,0,0), igvColor(1, 1, 1, 1), 1, 0, 0, igvPunto3D(-1, -1, 0), 50, 0), maniqui(igvPunto3D(-40,5,-40),&c) {
     ejes = true;
     movimientoCabeza = 0; movimientoHombroDer = 0, movimientoHombroIzq = 0;
     //Se cargan del fichero los objetos y se guardan
@@ -133,6 +133,16 @@ void igvEscena3D::setPosicionCamara(igvPunto3D _posicion) {
     luz.aplicar();
 }
 
+void igvEscena3D::moverPuerta1(){
+    if (Puerta1 < 9.5)
+        Puerta1 += 0.1;
+}
+
+void igvEscena3D::moverPuerta2(){
+    if (Puerta2 < 9.5)
+        Puerta2 += 0.1;
+}
+
 void igvEscena3D::visualizar() {
     glPushMatrix(); // guarda la matriz de modelado
     
@@ -186,14 +196,14 @@ void igvEscena3D::visualizar() {
     glPopMatrix();
 
     glPushMatrix();//Crea puerta
-    glTranslatef(-25, 5, 0);
-    glScalef(1, 4, 5);
+    glTranslatef(-25, 5, 0 + Puerta1);
+    glScalef(0.9, 4, 5);
     c.cargarCubo(PUERTA, 1, 1);
     glPopMatrix();
 
     glPushMatrix();//Crea puerta
-    glTranslatef(25, 5, 0);
-    glScalef(1, 4, 5);
+    glTranslatef(25, 5, 0 - Puerta2);
+    glScalef(0.9, 4, 5);
     c.cargarCubo(PUERTA, 1, 1);
     glPopMatrix();
 

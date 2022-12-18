@@ -45,6 +45,7 @@ protected:
 
 
 public:
+    float Puerta1=0, Puerta2 = 0;
     igvFuenteLuz luz;
     robot maniqui;
     // Constructores por defecto y destructor
@@ -83,6 +84,8 @@ public:
     float getMinHom() const;
 
     void setPosicionCamara(igvPunto3D _posicion);
+    void moverPuerta1();
+    void moverPuerta2();
 
 };
 

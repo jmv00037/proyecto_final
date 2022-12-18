@@ -9,12 +9,14 @@
 #include <GL/glut.h>
 #endif
 
+#include "cubo.h"
 #include "igvPunto3D.h"
 
 class robot {
 private:
 	bool encendido;
 
+	cubo* c;
 	igvPunto3D posicionRobot;
 
 	GLfloat color_pieza[3] = { 0,0.25,0 };
@@ -37,7 +39,8 @@ private:
 	int rotacionPierna2;
 
 public:
-	robot(igvPunto3D posicionRobot_);
+	robot(igvPunto3D posicionRobot_, cubo* c_);
+	~robot();
 
 	void dibujar();
 
