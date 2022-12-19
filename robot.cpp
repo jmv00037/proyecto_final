@@ -5,13 +5,13 @@
 
 
 
-robot::robot(igvPunto3D posicionRobot_, cubo* c_) {
+robot::robot(igvPunto3D posicionRobot_, cubo* c_, int rotY) {
 
 	posicionRobot = posicionRobot_;
 	c = c_;
 
 	rotacionBaseX = 0;
-	rotacionBaseY = 180;
+	rotacionBaseY = rotY;
 	rotacionBaseZ = 0;
 	rotacionHombro1X = 0;
 	rotacionHombro1Z = 0;

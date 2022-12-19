@@ -17,7 +17,7 @@ cubo::~cubo(){
     free(torso);
 }
 
-void cubo::dibujar(float sx, float sy, float sz, unsigned int lugar, unsigned int repetirX, unsigned int repetiY)
+void cubo::dibujar(float sx, float sy, float sz, unsigned int lugar, unsigned int repetirX, unsigned int repetirY)
 {
      
     int i, j;
@@ -27,7 +27,7 @@ void cubo::dibujar(float sx, float sy, float sz, unsigned int lugar, unsigned in
         glNormal3f(normals[i][0], normals[i][1], normals[i][2]);
         for (j = 0; j < 4; j++)
         {
-            glTexCoord2f(textures[i][j][0]*repetirX, textures[i][j][1]* repetiY); // SE MULTIPLICA POR repetir PARA REPETIR LA IMAGEN varias VECES EN EL CUBO
+            glTexCoord2f(textures[i][j][0]*repetirX, textures[i][j][1]* repetirY); // SE MULTIPLICA POR repetir PARA REPETIR LA IMAGEN varias VECES EN EL CUBO
             glVertex3f(sx * cube[i][j][0], sy * cube[i][j][1], sz * cube[i][j][2]);
         }
         glEnd();
@@ -64,11 +64,11 @@ void cubo::aplicarTexturas(unsigned int x){
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 }
 
-void cubo::cargarCubo(unsigned int x, unsigned int repetirX, unsigned int repetiY){
+void cubo::cargarCubo(unsigned int x, unsigned int repetirX, unsigned int repetirY){
     aplicarTexturas(x);
-    dibujar(1, 1, 1, x, repetirX,repetiY);
+    dibujar(1, 1, 1, x, repetirX,repetirY);
 }
 
-void cubo::sint(unsigned int x, unsigned int repetirX, unsigned int repetiY) {
-    dibujar(1, 1, 1, x, repetirX, repetiY);
+void cubo::sint(unsigned int x, unsigned int repetirX, unsigned int repetirY) {
+    dibujar(1, 1, 1, x, repetirX, repetirY);
 }

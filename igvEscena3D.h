@@ -52,7 +52,7 @@ public:
     puerta p1, p2;
     float Puerta1=0, Puerta2 = 0;
     igvFuenteLuz luz;
-    robot maniqui;
+    robot maniqui, maniqui2;
     // Constructores por defecto y destructor
     igvEscena3D();
     ~igvEscena3D();

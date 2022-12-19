@@ -161,8 +161,9 @@ float  igvCamara::onKeyBoard(unsigned char key, double dt) {
 std::pair<float, float> igvCamara::mirar(double incAlfa, double incBeta, double dt)
 {
     rAnterior = r;
-    beta += incBeta * mouseSpeed * dt;
     alfa += incAlfa * mouseSpeed * dt;
+    beta += incBeta * mouseSpeed * dt;
+    
     
     std::pair<float, float> ret(alfa,beta);
 

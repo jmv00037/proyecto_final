@@ -10,10 +10,12 @@
 
 // Metodos constructores 
 
-igvEscena3D::igvEscena3D():luz(GL_LIGHT0, igvPunto3D(1.0, 1.0, 1.0), igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.0), double(0.0)), maniqui(igvPunto3D(-40,5,-40),&c), p1(0.0,1.0,0.0), p2(0.0,0.0,1.0){
+igvEscena3D::igvEscena3D():luz(GL_LIGHT0, igvPunto3D(1.0, 1.0, 1.0), igvColor(0.0, 0.0, 0.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), igvColor(1.0, 1.0, 1.0, 1.0), double(1.0), double(0.0), double(0.0)),
+                            maniqui(igvPunto3D(-40,5,-40),&c,180), p1(0.0,1.0,0.0), p2(0.0,0.0,1.0), maniqui2(igvPunto3D(40, 5, 40), &c,0) {
     ejes = true;
     movimientoCabeza = 0; movimientoHombroDer = 0, movimientoHombroIzq = 0;
     //Se cargan del fichero los objetos y se guardan
+    luz.encender();
     luz.aplicar();
 
 
@@ -132,6 +134,16 @@ void igvEscena3D::moverPuerta2(){
         Puerta2 += 0.1;
 }
 
+void hitBox(std::vector<float> pos, robot& m) {
+    cout << pos[0] << ", " << pos[1] << ", " << pos[2] << endl;
+    cout << m.posicionRobot[X] << ", " << m.posicionRobot[Y] << ", " << m.posicionRobot[Z] << endl << endl;
+    if (pos[0] <= m.posicionRobot[X] + 2 && pos[0] >= m.posicionRobot[X]-2 &&
+        abs(pos[1]) <= abs(m.posicionRobot[Y]) + 1 && abs(pos[1]) >= abs(m.posicionRobot[Y]) - 1 &&
+        abs(pos[2]) <= abs(m.posicionRobot[Z]) + 2 && abs(pos[2]) >= abs(m.posicionRobot[Z]) - 2) {
+        m.morir();
+    }
+}
+
 void igvEscena3D::visualizar() {
     glPushMatrix(); // guarda la matriz de modelado
     //luz.aplicar();
@@ -140,48 +152,48 @@ void igvEscena3D::visualizar() {
     glColor3f(1.0, 1.0, 1.0);
 
     glPushMatrix(); //Crea el techo
-    glTranslatef(0, 10, 0);
-    glScalef(50, 1, 50); // expande el techo
-    c.cargarCubo(SUELO, 50, 50); //crea el cubo para el techo
+        glTranslatef(0, 10, 0);
+        glScalef(50, 1, 50); // expande el techo
+        c.cargarCubo(SUELO, 50, 50); //crea el cubo para el techo
     glPopMatrix();
     glPushMatrix(); //Crea el suelo
-    glScalef(50, 1, 50); // expande el suelo
-    c.cargarCubo(SUELO, 50, 50); //crea el cubo para el suelo
+        glScalef(50, 1, 50); // expande el suelo
+        c.cargarCubo(SUELO, 50, 50); //crea el cubo para el suelo
     glPopMatrix();
 
     glPushMatrix();//Crea las paredes exteriores
-    paredExterior(0, -50);
+        paredExterior(0, -50);
     glPopMatrix();
     glPushMatrix();//Crea las paredes exteriores
-    paredExterior(0, 50);
+        paredExterior(0, 50);
     glPopMatrix();
     glPushMatrix();//Crea las paredes exteriores
-    paredExterior(50, 0);
+        paredExterior(50, 0);
     glPopMatrix();
     glPushMatrix();//Crea las paredes exteriores
-    paredExterior(-50, 0);
+        paredExterior(-50, 0);
     glPopMatrix();
 
 
     glPushMatrix();//Crea las paredes habitacion
-    glTranslatef(25, 5, 30);
-    glScalef(1, 4, 25);
-    c.cargarCubo(PARED2, 50, 4);
-    glPopMatrix();
+        glTranslatef(25, 5, 30);
+        glScalef(1, 4, 25);
+        c.cargarCubo(PARED2, 50, 4);
+        glPopMatrix();
     glPushMatrix();//Crea las paredes habitacion
     glTranslatef(-25, 5, 30);
-    glScalef(1, 4, 25);
-    c.cargarCubo(PARED2, 50, 4);
+        glScalef(1, 4, 25);
+        c.cargarCubo(PARED2, 50, 4);
     glPopMatrix();
     glPushMatrix();//Crea las paredes habitacion
-    glTranslatef(-25, 5, -30);
-    glScalef(1, 4, 25);
-    c.cargarCubo(PARED2, 50, 4);
+        glTranslatef(-25, 5, -30);
+        glScalef(1, 4, 25);
+        c.cargarCubo(PARED2, 50, 4);
     glPopMatrix();
     glPushMatrix();//Crea las paredes habitacion
-    glTranslatef(25, 5, -30);
-    glScalef(1, 4, 25);
-    c.cargarCubo(PARED2, 50, 4);
+        glTranslatef(25, 5, -30);
+        glScalef(1, 4, 25);
+        c.cargarCubo(PARED2, 50, 4);
     glPopMatrix();
 
     // PISTOLA
@@ -216,6 +228,12 @@ void igvEscena3D::visualizar() {
             glTranslatef( pos[0], pos[1], pos[2]); // SE MUEVE LA BALA
             glutSolidSphere(0.1,100,2);
         glPopMatrix();
+        
+        //SE COMPRUEBA SI HA DADO AL ROBOT
+        hitBox(pos,maniqui);
+        hitBox(pos, maniqui2);
+
+        //SE DESTRUYE LA BALA SI RECORRE CIERTA DISTANCIA
         if (++destruirBalas[i] == MAXIMA_DISTANCIA) {
             destruirBalas.erase(destruirBalas.begin());
             balas.erase(balas.begin());
@@ -223,10 +241,16 @@ void igvEscena3D::visualizar() {
         }
 
     }
-
-
-    maniqui.dibujar();
-
+    if (!maniqui.muerto()) {
+        glPushMatrix();
+            maniqui.dibujar();
+        glPopMatrix();
+    }
+    if (!maniqui2.muerto()) {
+        glPushMatrix();
+            maniqui2.dibujar();
+        glPopMatrix();
+    }
 
     glPopMatrix(); // restaura la matriz de modelado
 

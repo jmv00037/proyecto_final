@@ -14,10 +14,10 @@
 
 class robot {
 private:
-	bool encendido;
+	bool estaMuerto = false;
 
 	cubo* c;
-	igvPunto3D posicionRobot;
+	
 
 	GLfloat color_pieza[3] = { 0,0.25,0 };
 	GLfloat color_pieza2[3] = { 0.25,0,0 };
@@ -39,8 +39,14 @@ private:
 	int rotacionPierna2;
 
 public:
-	robot(igvPunto3D posicionRobot_, cubo* c_);
+	robot(igvPunto3D posicionRobot_, cubo* c_, int rotY);
 	~robot();
+
+	igvPunto3D posicionRobot;
+
+	bool muerto() { return estaMuerto; }
+	void revivir() { estaMuerto = false; }
+	void morir() { estaMuerto = true; }
 
 	void dibujar();
 

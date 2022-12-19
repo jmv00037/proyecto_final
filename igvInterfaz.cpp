@@ -5,6 +5,8 @@
 #include <iostream>
 #include "igvInterfaz.h"
 #include <utility>
+#include <windows.h>
+#include <mmsystem.h>
 
 using namespace std;
 
@@ -74,21 +76,19 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
     case 'a':
     case 'd':
     case 'w':
-    case 's':
+    case 's': //MOVIMIENTO DE CAMARA
         interfaz.camara.onKeyBoard(key, interfaz.dt);
         interfaz.camara.aplicar();
         interfaz.escena.setPosicionCamara(interfaz.camara.r);
         interfaz.escena.luz.aplicar();
         break;
-    case 'z':
+    case 'z': //ZOOM
         (!interfaz.camara.getZoom()) ? interfaz.camara.zoom() : interfaz.camara.revZoom();
         interfaz.camara.aplicar();
         break;
-    case 'q': {
+    case 'q': { //DISPARO
         igvPunto3D s = interfaz.camara.P0 - interfaz.camara.r;
-        s.normalizar();
-        cout << s[X] << ", " << s[Y] << ", " << s[Z] << endl;
-        cout << interfaz.camara.P0[X] << ", " << interfaz.camara.P0[Y] << ", " << interfaz.camara.P0[Z] << endl;
+        s.normalizar(); //s es la direccion en la que apunta la camara
 
         std::pair<igvPunto3D, float> ret(interfaz.camara.P0, interfaz.dt * 17);  // posicion de la camara y velocidad de movimiento
         
@@ -97,13 +97,13 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
         interfaz.escena.destruirBalas.push_back(0);
         break;
     }
-    case 'e':
-        interfaz.escena.luz.apagar();
+    case 'e': //APAGAR LUZ
+        (interfaz.escena.luz.esta_encendida()) ? interfaz.escena.luz.apagar() : interfaz.escena.luz.encender();
         interfaz.escena.luz.aplicar();
         break;
-    case 'r':
-        interfaz.escena.luz.encender();
-        interfaz.escena.luz.aplicar();
+    case 'r': //APAGAR LUZ
+        interfaz.escena.maniqui.revivir();
+        interfaz.escena.maniqui2.revivir();
         break;
     case 27: // tecla de escape para SALIR
         exit(1);
@@ -248,19 +248,23 @@ void igvInterfaz::set_glutIdleFunc() {
     }
    
     
-
+        //ANIMACION ROBOT
         if (interfaz.movimiento1 == false) {
             if (interfaz.escena.maniqui.get_rotacionHombro2X() < 40) {
                 interfaz.escena.maniqui.set_rotacionHombro2X(interfaz.escena.maniqui.get_rotacionHombro2X() + velocidad);
+                interfaz.escena.maniqui2.set_rotacionHombro2X(interfaz.escena.maniqui2.get_rotacionHombro2X() + velocidad);
             }
             if (interfaz.escena.maniqui.get_rotacionHombro1X() > -40) {
                 interfaz.escena.maniqui.set_rotacionHombro1X(interfaz.escena.maniqui.get_rotacionHombro1X() - velocidad);
+                interfaz.escena.maniqui2.set_rotacionHombro1X(interfaz.escena.maniqui2.get_rotacionHombro1X() - velocidad);
             }
             if (interfaz.escena.maniqui.get_rotacionPierna2() < 40) {
                 interfaz.escena.maniqui.set_rotacionPierna2(interfaz.escena.maniqui.get_rotacionPierna2() + velocidad);
+                interfaz.escena.maniqui2.set_rotacionPierna2(interfaz.escena.maniqui2.get_rotacionPierna2() + velocidad);
             }
             if (interfaz.escena.maniqui.get_rotacionPierna1() > -40) {
                 interfaz.escena.maniqui.set_rotacionPierna1(interfaz.escena.maniqui.get_rotacionPierna1() - velocidad);
+                interfaz.escena.maniqui2.set_rotacionPierna1(interfaz.escena.maniqui2.get_rotacionPierna1() - velocidad);
             }
             else {
                 interfaz.movimiento1 = true;
@@ -270,39 +274,46 @@ void igvInterfaz::set_glutIdleFunc() {
         else {
             if (interfaz.escena.maniqui.get_rotacionHombro2X() > -40) {
                 interfaz.escena.maniqui.set_rotacionHombro2X(interfaz.escena.maniqui.get_rotacionHombro2X() - velocidad);
+                interfaz.escena.maniqui2.set_rotacionHombro2X(interfaz.escena.maniqui2.get_rotacionHombro2X() - velocidad);
             }
             if (interfaz.escena.maniqui.get_rotacionHombro1X() < 40) {
                 interfaz.escena.maniqui.set_rotacionHombro1X(interfaz.escena.maniqui.get_rotacionHombro1X() + velocidad);
+                interfaz.escena.maniqui2.set_rotacionHombro1X(interfaz.escena.maniqui2.get_rotacionHombro1X() + velocidad);
             }
             if (interfaz.escena.maniqui.get_rotacionPierna2() > -40) {
                 interfaz.escena.maniqui.set_rotacionPierna2(interfaz.escena.maniqui.get_rotacionPierna2() - velocidad);
+                interfaz.escena.maniqui2.set_rotacionPierna2(interfaz.escena.maniqui2.get_rotacionPierna2() - velocidad);
             }
             if (interfaz.escena.maniqui.get_rotacionPierna1() < 40) {
                 interfaz.escena.maniqui.set_rotacionPierna1(interfaz.escena.maniqui.get_rotacionPierna1() + velocidad);
+                interfaz.escena.maniqui2.set_rotacionPierna1(interfaz.escena.maniqui2.get_rotacionPierna1() + velocidad);
             }
             else {
                 interfaz.movimiento1 = false;
             }
         }
-        //MOVIMIENTO ROBOT
         
-        //cout << interfaz.movimientoRobot << endl;
+        //MOVIMIENTO ROBOT
         if (interfaz.movimientoRobot == STOP) {
             interfaz.atras = true;
             interfaz.escena.maniqui.girar();
+            interfaz.escena.maniqui2.girar();
         }
         if (interfaz.movimientoRobot == 0) {
             interfaz.atras = false;
             interfaz.escena.maniqui.girar();
+            interfaz.escena.maniqui2.girar();
         }
 
         if (interfaz.atras) {
             interfaz.movimientoRobot--;
             interfaz.escena.maniqui.moverAtras();
+            interfaz.escena.maniqui2.moverAdelante();
         }
         else {
             interfaz.movimientoRobot++;
             interfaz.escena.maniqui.moverAdelante();
+            interfaz.escena.maniqui2.moverAtras();
         }
 
 
