@@ -65,16 +65,7 @@ public:
     puerta& getPuerta1() { return p1; }
     puerta& getPuerta2() { return p2; }
     void visualizarVB(void);
-
-    ////// Apartado C: a�adir aqu� los m�todos para modificar los grados de libertad del modelo
-    float restriccion(float angle, int min, int max, float& mov);
-    float moverCabeza(float angle);
-    float moverHombroDer(float angle);
-    float moverHombroIzq(float angle);
-    float moverPiernaDer(float angle);
-    float moverPiernaIzq(float angle);
     void paredExterior(int x, int z);
-    float moverTorso(float angle);
 
     bool get_ejes() { return ejes; };
     void set_ejes(bool _ejes) { ejes = _ejes; };

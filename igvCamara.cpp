@@ -91,6 +91,9 @@ void igvCamara::aplicar(void) {
 	gluLookAt(P0[X], P0[Y], P0[Z], r[X], r[Y], r[Z], v[X], v[Y], v[Z]);
 }
 
+/// <summary>
+/// Aplica zoom
+/// </summary>
 void igvCamara::zoom(){
     if (!hayZoom) {
         angulo /= 1 + 0.5;
@@ -102,6 +105,9 @@ void igvCamara::zoom(){
     }
 }
 
+/// <summary>
+/// Quita zoom aplicado
+/// </summary>
 void igvCamara::revZoom(){
     if (hayZoom) {
         angulo *= 1 + 0.5;
@@ -117,6 +123,12 @@ void igvCamara::setPosition(float x, float y, float z) {
     P0.set(x, y, z);
 }
 
+/// <summary>
+/// Mueve la camara según la tecla pulsada
+/// </summary>
+/// <param name="key">tecla pulsada</param>
+/// <param name="dt">diferencia de tiempo respecto anterior fotograma</param>
+/// <returns></returns>
 float  igvCamara::onKeyBoard(unsigned char key, double dt) {
     double y1 = P0[Y];
     double y2 = r[Y];
@@ -158,6 +170,13 @@ float  igvCamara::onKeyBoard(unsigned char key, double dt) {
     return m_speed * dt;
 }
 
+/// <summary>
+/// Rota la camara segun posicion del raton
+/// </summary>
+/// <param name="difX">Posicion X del cursor respecto a la pantalla</param>
+/// <param name="difY">Posicion Y del cursor respecto a la pantalla</param>
+/// <param name="dt">diferencia de tiempo respecto anterior fotograma</param>
+/// <returns>devuelve el angulo que rota la camara</returns>
 std::pair<float, float> igvCamara::mirar(double difX, double difY, double dt)
 {
     rAnterior = r;
@@ -181,6 +200,7 @@ std::pair<float, float> igvCamara::mirar(double difX, double difY, double dt)
     r[X] = P0[X] + sin(alfaRad) * rxz;
     r[Y] = P0[Y] + sin(betaRad) * dist;
     r[Z] = P0[Z] - cos(alfaRad) * rxz;
+
     if (abs(betaRad) > 0.5) { //bloqueo de camara en el eje Y
         beta -= difY * mouseSpeed * dt;
         alfa -= difX * mouseSpeed * dt;

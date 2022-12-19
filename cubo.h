@@ -98,7 +98,7 @@ public:
 	cubo();
 	~cubo();
 
-	void dibujar(float sx, float sy, float sz, unsigned int lugar, unsigned int repetir, unsigned int repetiY);
+	void dibujar(float sx, float sy, float sz, unsigned int repetir, unsigned int repetiY);
 	void aplicarTexturas(unsigned int x);
 	void cargarCubo(unsigned int x, unsigned int repetir, unsigned int repetiY);
 	void sint(unsigned int x, unsigned int repetirX, unsigned int repetiY);

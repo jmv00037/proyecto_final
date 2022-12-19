@@ -17,7 +17,10 @@ cubo::~cubo(){
     free(torso);
 }
 
-void cubo::dibujar(float sx, float sy, float sz, unsigned int lugar, unsigned int repetirX, unsigned int repetirY)
+/// <summary>
+/// crea un cubo
+/// </summary>
+void cubo::dibujar(float sx, float sy, float sz, unsigned int repetirX, unsigned int repetirY)
 {
      
     int i, j;
@@ -34,6 +37,10 @@ void cubo::dibujar(float sx, float sy, float sz, unsigned int lugar, unsigned in
     }
 }
 
+/// <summary>
+/// aplica texturas indicadas
+/// </summary>
+/// <param name="x">id textura</param>
 void cubo::aplicarTexturas(unsigned int x){
     glBindTexture(GL_TEXTURE_2D, x);
     switch (x){
@@ -64,11 +71,17 @@ void cubo::aplicarTexturas(unsigned int x){
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 }
 
+/// <summary>
+/// Crea un cubo con textura
+/// </summary>
 void cubo::cargarCubo(unsigned int x, unsigned int repetirX, unsigned int repetirY){
     aplicarTexturas(x);
-    dibujar(1, 1, 1, x, repetirX,repetirY);
+    dibujar(1, 1, 1,  repetirX,repetirY);
 }
 
+/// <summary>
+/// Crea un cubo sin textura
+/// </summary>
 void cubo::sint(unsigned int x, unsigned int repetirX, unsigned int repetirY) {
-    dibujar(1, 1, 1, x, repetirX, repetirY);
+    dibujar(1, 1, 1,  repetirX, repetirY);
 }

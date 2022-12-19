@@ -30,8 +30,12 @@ igvEscena3D::igvEscena3D():luz(GL_LIGHT0, igvPunto3D(1.0, 1.0, 1.0), igvColor(0.
 igvEscena3D::~igvEscena3D() {
 }
 
-///// Apartado B: M�todos para visualizar cada parte del modelo
-
+/// <summary>
+/// Dibuja el modelo cargado de un fichero obj
+/// </summary>
+/// <param name="v">Vector de vertices</param>
+/// <param name="n">Vector de normales</param>
+/// <param name="tri">Malla de triangulos</param>
 void igvEscena3D::visualizarPartes(std::vector<float>& v, std::vector<float>& n, std::vector<unsigned int>& tri) {
     glFlush();
 
@@ -51,6 +55,10 @@ void igvEscena3D::visualizarPartes(std::vector<float>& v, std::vector<float>& n,
 
 }
 
+/// <summary>
+/// Crea las puertas sin texturas
+/// </summary>
+/// <param name=""></param>
 void igvEscena3D::visualizarVB(void){
     glPushMatrix();//Crea puerta
         glTranslatef(-25, 5, 0 + Puerta1);
@@ -67,6 +75,10 @@ void igvEscena3D::visualizarVB(void){
 
 }
 
+/// <summary>
+/// Crea las puertas con texturas
+/// </summary>
+/// <param name=""></param>
 void igvEscena3D::visualizarPuertas(void) {
     glColor3f(1.0, 1.0, 1.0);
 
@@ -82,35 +94,11 @@ void igvEscena3D::visualizarPuertas(void) {
 
 }
 
-////// Apartado C: a�adir aqu� los m�todos para modificar los grados de libertad del modelo
-float igvEscena3D::restriccion(float angle, int min, int max, float& mov) {
-    return (angle <= max && angle >= min) ? mov = angle : mov;
-}
-
-float igvEscena3D::moverCabeza(float angle) {
-    return restriccion(angle, minCabeza, maxCabeza, movimientoCabeza);
-}
-
-float igvEscena3D::moverHombroDer(float angle) {
-    return restriccion(angle, minHom, maxHom, movimientoHombroDer);
-}
-
-float igvEscena3D::moverHombroIzq(float angle) {
-    return restriccion(angle, minHom, maxHom, movimientoHombroIzq);
-}
-
-float igvEscena3D::moverTorso(float angle) {
-    return movimientoTorso = angle;
-}
-
-float igvEscena3D::moverPiernaDer(float angle) {
-    return restriccion(angle, minPie, maxPie, movimientoPiernaDer);
-}
-
-float igvEscena3D::moverPiernaIzq(float angle) {
-    return restriccion(angle, minPie, maxPie, movimientoPiernaIzq);
-}
-
+/// <summary>
+/// Crea las paredes exteriores
+/// </summary>
+/// <param name="x">Posicion X</param>
+/// <param name="z">Posicion Z</param>
 void igvEscena3D::paredExterior(int x, int z) {
     glTranslatef(x, 5, z);
     if (x == 0)
@@ -124,19 +112,28 @@ void igvEscena3D::setPosicionCamara(igvPunto3D _posicion) {
     luz.setPosicion(_posicion);
 }
 
+/// <summary>
+/// Mueve la puerta
+/// </summary>
 void igvEscena3D::moverPuerta1(){
     if (Puerta1 < 9.5)
         Puerta1 += 0.1;
 }
 
+/// <summary>
+/// Mueve la puerta
+/// </summary>
 void igvEscena3D::moverPuerta2(){
     if (Puerta2 < 9.5)
         Puerta2 += 0.1;
 }
 
+/// <summary>
+/// Calcula si la bala está dentro del rango del robot
+/// </summary>
+/// <param name="pos"> Posicion de la bala en el espacio </param>
+/// <param name="m"> Robot </param>
 void hitBox(std::vector<float> pos, robot& m) {
-    cout << pos[0] << ", " << pos[1] << ", " << pos[2] << endl;
-    cout << m.posicionRobot[X] << ", " << m.posicionRobot[Y] << ", " << m.posicionRobot[Z] << endl << endl;
     if (pos[0] <= m.posicionRobot[X] + 2 && pos[0] >= m.posicionRobot[X]-2 &&
         abs(pos[1]) <= abs(m.posicionRobot[Y]) + 1 && abs(pos[1]) >= abs(m.posicionRobot[Y]) - 1 &&
         abs(pos[2]) <= abs(m.posicionRobot[Z]) + 2 && abs(pos[2]) >= abs(m.posicionRobot[Z]) - 2) {
@@ -146,7 +143,6 @@ void hitBox(std::vector<float> pos, robot& m) {
 
 void igvEscena3D::visualizar() {
     glPushMatrix(); // guarda la matriz de modelado
-    //luz.aplicar();
     
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glColor3f(1.0, 1.0, 1.0);
@@ -196,17 +192,19 @@ void igvEscena3D::visualizar() {
         c.cargarCubo(PARED2, 50, 4);
     glPopMatrix();
 
-    // PISTOLA
-    glPushMatrix();
-        glTranslatef(x, 2.3, z);     // MUEVE LA POSTOLA AL LADO DE LA CAMARA
-        glRotatef(-angX, 0, 1, 0);   // ROTA LA PISTOLA SEGÚN EL MOVIMIENTO DE RATON
-        glTranslatef(-x, -2.3, -z ); //MUEVE LA PISTOLA AL ORIGEN
-        glTranslatef(x+0.2, 2.3, z);
-        glScalef(0.05,0.05,0.05);
-        glRotatef(180, 0, 1, 0);
-        visualizarPartes(pistola.vertices, pistola.normales, pistola.triangulos); // GENERA MODELO DE LA PISTOLA A PARTIR DEL FICHERO .OBJ
-    glPopMatrix();
-    
+    if (cargadoCorrectamente) {
+        // PISTOLA
+        glPushMatrix();
+            glTranslatef(x, 2.3, z);     // MUEVE LA POSTOLA AL LADO DE LA CAMARA
+            glRotatef(-angX, 0, 1, 0);   // ROTA LA PISTOLA SEGÚN EL MOVIMIENTO DE RATON
+            glTranslatef(-x, -2.3, -z); //MUEVE LA PISTOLA AL ORIGEN
+            glTranslatef(x + 0.2, 2.3, z);
+            glScalef(0.05, 0.05, 0.05);
+            glRotatef(180, 0, 1, 0);
+            visualizarPartes(pistola.vertices, pistola.normales, pistola.triangulos); // GENERA MODELO DE LA PISTOLA A PARTIR DEL FICHERO .OBJ
+        glPopMatrix();
+    }
+
     for (int i = 0; i < balas.size(); i++) {
         std::vector<float> pos; // SE GUARDAN LAS POSICIONES DE LA BALA
 

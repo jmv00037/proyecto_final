@@ -19,23 +19,29 @@
 
 namespace utils{
 
-    //FUNCIONES UTILES
-    /**
-     * CARGA UN OBJETO DE UN FICHERO .obj
-     * @param path RUTA DEL FICHERO
-     * @param vertices VECTOR CON LOS VERTICES DEL OBJETO
-     * @param texture VECTOR CON LOS VERTICES DE TEXTURAS
-     * @param normals VECTOR CON LAS NORMALES
-     * @param triangle VECTOR CON LOS TRIANGULOS
-     * @return FALSO SI NO ABRE EL FICHERO, TRUE SI CARGA EL OBJETO COMPLETO
-     */
+    /// <summary>
+    /// Carga el modelo obj en los vectores
+    /// </summary>
+    /// <param name="path">path del archivo</param>
+    /// <param name="vertices">vector de vertices</param>
+    /// <param name="texture">vector de texturas</param>
+    /// <param name="normals">vector de normales</param>
+    /// <param name="triangle">vector de triangulos</param>
+    /// <returns></returns>
     bool cargaOBJ(const char* path,
                   std::vector<float>& vertices,
                   std::vector<float>& texture,
                   std::vector<float>& normals,
                   std::vector<unsigned int>& triangle);
 
-
+    /// <summary>
+    /// Carga la textura
+    /// </summary>
+    /// <param name="tex">id de la textura</param>
+    /// <param name="filename">path del archivo</param>
+    /// <param name="width">numero de pixeles en ancho</param>
+    /// <param name="height">numero de pixeles en alto</param>
+    /// <returns>devuelve la textura cargada</returns>
     unsigned char* LoadTexture(GLuint tex, const char* filename, int width, int height);
 
 }

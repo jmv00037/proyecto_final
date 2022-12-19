@@ -24,8 +24,6 @@ public:
 	puerta(const puerta& orig);
 	~puerta();
 
-	void boton(cubo& c);
-
 	//Método para visualizar una caja
 	void visualizarSinT(cubo& c);
 	void visualizarConT(cubo& c);
@@ -34,7 +32,6 @@ public:
 	float* getColor();
 	GLubyte* getColorByte(); //Para comparar con el pixel obtenido en la selección
 	void setColorByte(float r, float g, float b);
-	void setRotate(float grados);
 
 };
 

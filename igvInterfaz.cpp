@@ -41,9 +41,6 @@ void igvInterfaz::configura_entorno(int argc, char** argv,
     // inicializaci�n de la ventana de visualizaci�n
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-    glutInitWindowSize(_ancho_ventana, _alto_ventana);
-    glutInitWindowPosition(_pos_X, _pos_Y);
-    //glutCreateWindow(_titulo.c_str());
 
     char game_mode_string[64];
     snprintf(game_mode_string, sizeof(game_mode_string), "%dx%d@60", ancho_ventana, alto_ventana);
@@ -65,11 +62,6 @@ void igvInterfaz::inicia_bucle_visualizacion() {
     glutMainLoop(); // inicia el bucle de visualizacion de OpenGL
 }
 
-void Timer(int iUnused) {
-    glutPostRedisplay();
-    glutTimerFunc(30, Timer, 0);
-}
-
 void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
     int velocidad = 40;
     switch (key) {
@@ -89,7 +81,6 @@ void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
     case 'q': { //DISPARO
         igvPunto3D s = interfaz.camara.P0 - interfaz.camara.r;
         s.normalizar(); //s es la direccion en la que apunta la camara
-
         std::pair<igvPunto3D, float> ret(interfaz.camara.P0, interfaz.dt * 17);  // posicion de la camara y velocidad de movimiento
         
         interfaz.escena.balas.push_back(ret);
@@ -132,14 +123,6 @@ void igvInterfaz::set_glutDisplayFunc() {
     // se establece el viewport
     glViewport(0, 0, interfaz.get_ancho_ventana(), interfaz.get_alto_ventana());
 
-
-    // aplica las transformaciones en funci�n de los par�metros de la c�mara
-    //interfaz.camara.aplicar();
-    // visualiza la escena
-    //interfaz.escena.visualizar();
-
-    // refresca la ventana
-    //glutSwapBuffers();
     // Apartado A: antes de aplicar las transformaciones de cámara y proyección hay que comprobar el modo para sólo visualizar o seleccionar:
     if (interfaz.modo == IGV_SELECCIONAR) {
         // Apartado A: Para que funcione habrá que dibujar la escena sin efectos, sin iluminación, sin texturas ...
@@ -155,14 +138,12 @@ void igvInterfaz::set_glutDisplayFunc() {
         {
             //Puerta 1
             if (interfaz.escena.getPuerta1().getColorByte()[0] == 255 && interfaz.escena.getPuerta1().getColorByte()[1] == 255 && interfaz.escena.getPuerta1().getColorByte()[2] == 0) {
-                //std::cout << "encontrado color amarillo\n";
 
                 interfaz.escena.getPuerta1().setColorByte((float)interfaz.colorPixelGuardado[0] / 255, (float)interfaz.colorPixelGuardado[1] / 255, (float)interfaz.colorPixelGuardado[2] / 255);
                 interfaz.objeto_seleccionado = 1;
             }
             //Puerta 2
             if (interfaz.escena.getPuerta2().getColorByte()[0] == 255 && interfaz.escena.getPuerta2().getColorByte()[1] == 255 && interfaz.escena.getPuerta2().getColorByte()[2] == 0) {
-                //std::cout << "encontrado color amarillo\n";
 
                 interfaz.escena.getPuerta2().setColorByte((float)interfaz.colorPixelGuardado[0] / 255, (float)interfaz.colorPixelGuardado[1] / 255, (float)interfaz.colorPixelGuardado[2] / 255);
                 interfaz.objeto_seleccionado = 1;
@@ -181,13 +162,6 @@ void igvInterfaz::set_glutDisplayFunc() {
         // Apartado A: Obtener el color del pixel seleccionado
         GLubyte colorPixel[3];
         glReadPixels(interfaz.cursorX, interfaz.cursorY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, colorPixel);
-        //std::cout << "\nColor seleccionado caja: " << (float)colorPixel[0] << "," << (float)colorPixel[1] << "," << (float)colorPixel[2] << "\n";
-        //std::cout << "\nColor seleccionado puerta: " << (float)interfaz.escena.getPuerta1().getColorByte()[0] << "," << (float)interfaz.escena.getPuerta1().getColorByte()[1] << "," << (float)interfaz.escena.getPuerta1().getColorByte()[2] << "\n";
-
-        // Apartado A: Comprobar el color del objeto que hay en el cursor mirando en la tabla de colores y asigna otro color al objeto seleccionado
-
-
-        //cout << interfaz.escena.getCajas().size() << "je\n";
 
         if (colorPixel[0] == 0 && colorPixel[1] != 0  && 0 == colorPixel[2]) {
             interfaz.colorPixelGuardado[0] = colorPixel[0];
@@ -225,28 +199,6 @@ void igvInterfaz::set_glutDisplayFunc() {
 
 void igvInterfaz::set_glutIdleFunc() {
     int velocidad = 1;
-
-    if(interfaz.animacion) {
-        if(interfaz.angCabeza==interfaz.escena.getMaxCabeza() || interfaz.angCabeza==interfaz.escena.getMinCabeza()){
-            interfaz.cambiarCabeza = !interfaz.cambiarCabeza;
-        }
-        if(interfaz.cambiarCabeza) {
-            interfaz.angCabeza += interfaz.deltaX;
-            interfaz.angCabeza = interfaz.escena.moverCabeza(interfaz.angCabeza);
-            interfaz.escena.moverPiernaDer(interfaz.angCabeza);
-            interfaz.escena.moverPiernaIzq(-interfaz.angCabeza);
-            interfaz.escena.moverHombroDer(interfaz.angCabeza-90);
-            interfaz.escena.moverHombroIzq(-interfaz.angCabeza-90);
-        }else{
-            interfaz.angCabeza -= interfaz.deltaX;
-            interfaz.angCabeza = interfaz.escena.moverCabeza(interfaz.angCabeza);
-            interfaz.escena.moverPiernaDer(interfaz.angCabeza);
-            interfaz.escena.moverPiernaIzq(-interfaz.angCabeza);
-            interfaz.escena.moverHombroDer(interfaz.angCabeza-90);
-            interfaz.escena.moverHombroIzq(-interfaz.angCabeza-90);
-        }
-    }
-   
     
         //ANIMACION ROBOT
         if (interfaz.movimiento1 == false) {
@@ -347,15 +299,13 @@ void igvInterfaz::inicializa_callbacks() {
     glutTimerFunc(1000 / FPS, loop, 0);//espera un numero de milisegundos para que vaya fluido
 }
 
-void igvInterfaz::loop(int)
-{
+void igvInterfaz::loop(int){
     glutWarpPointer(interfaz.ancho_ventana / 2, interfaz.alto_ventana / 2); //Mantiene el ranton en el centro
     int t = glutGet(GLUT_ELAPSED_TIME); //numero de milisegundos desde que se llamo a glutinit()
     interfaz.dt = (t - interfaz.tUltimoFotograma) / 1000.0;
     interfaz.tUltimoFotograma = t;
     glutPostRedisplay();
     glutTimerFunc(1000 / FPS, loop, 0);
-
 }
 
 void igvInterfaz::set_glutMouseFunc(GLint boton, GLint estado, GLint x, GLint y){

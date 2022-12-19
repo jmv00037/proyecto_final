@@ -96,12 +96,6 @@ public:
 	std::pair<float, float> mirar(double incAlfa, double incBeta, double dt);
 	bool getZoom() { return hayZoom; }
 
-    /*
-	void set_vista(tipoCamara t) { tipo = t; };
-	tipoCamara get_vista() { return tipo; };
-	void set_poscam(poscam x) { vis = x; };
-	poscam get_poscam() { return vis; };
-    */
 };
 
 #endif

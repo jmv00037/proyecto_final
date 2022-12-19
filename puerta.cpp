@@ -25,13 +25,17 @@ puerta::~puerta() {
 	delete color;
 };
 
-//Método para visualizar una caja
+/// <summary>
+/// crea la puerta sin textura
+/// </summary>
 void puerta::visualizarSinT(cubo& c) {
 	glScalef(0.9, 4, 5);
 	c.sint(PUERTA, 1, 1);
-	//c.cargarCubo(PUERTA, 1, 1);
 };
 
+/// <summary>
+/// crea la puerta con textura
+/// </summary>
 void puerta::visualizarConT(cubo& c) {
 	glScalef(0.9, 4, 5);
 	c.cargarCubo(PUERTA, 1, 1);
@@ -57,9 +61,3 @@ void puerta::setColorByte(float r, float g, float b) {
 	color[2] = b;
 }
 
-
-void puerta::setRotate(float grados) {
-	gradosGuardados += grados;
-	std::cout << "grados guardados: " << gradosGuardados << "\n";
-
-}
