@@ -323,10 +323,10 @@ void igvInterfaz::set_glutIdleFunc() {
 
 void igvInterfaz::passiveMouseCB(int x, int y) {
 
-    double nuevox = (x - (interfaz.ancho_ventana / 2));
-    double nuevoy = ((interfaz.alto_ventana / 2) - y);
+    double xRelativo = (x - (interfaz.ancho_ventana / 2));
+    double yRelativo = ((interfaz.alto_ventana / 2) - y);
     
-    std::pair<float, float> ang = interfaz.camara.mirar(nuevox, nuevoy, interfaz.dt);
+    std::pair<float, float> ang = interfaz.camara.mirar(xRelativo, yRelativo, interfaz.dt);
 
     interfaz.escena.angX = ang.first;
     interfaz.escena.angY = ang.second;

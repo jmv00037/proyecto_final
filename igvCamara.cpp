@@ -158,11 +158,11 @@ float  igvCamara::onKeyBoard(unsigned char key, double dt) {
     return m_speed * dt;
 }
 
-std::pair<float, float> igvCamara::mirar(double incAlfa, double incBeta, double dt)
+std::pair<float, float> igvCamara::mirar(double difX, double difY, double dt)
 {
     rAnterior = r;
-    alfa += incAlfa * mouseSpeed * dt;
-    beta += incBeta * mouseSpeed * dt;
+    alfa += difX * mouseSpeed * dt;
+    beta += difY * mouseSpeed * dt;
     
     
     std::pair<float, float> ret(alfa,beta);
@@ -182,8 +182,8 @@ std::pair<float, float> igvCamara::mirar(double incAlfa, double incBeta, double 
     r[Y] = P0[Y] + sin(betaRad) * dist;
     r[Z] = P0[Z] - cos(alfaRad) * rxz;
     if (abs(betaRad) > 0.5) { //bloqueo de camara en el eje Y
-        beta -= incBeta * mouseSpeed * dt;
-        alfa -= incAlfa * mouseSpeed * dt;
+        beta -= difY * mouseSpeed * dt;
+        alfa -= difX * mouseSpeed * dt;
         r = rAnterior;
         return ret;
     }
