@@ -70,14 +70,38 @@ void Timer(int iUnused){
     glutTimerFunc(30,Timer,0);
 }
 
+
+bool igvInterfaz::checkCollision() {
+
+	if ((interfaz.camara.P0[0] > 5 && interfaz.camara.P0[0] < 8) && (interfaz.camara.P0[2] > -10.5 && interfaz.camara.P0[2] < 10.5)) {
+		return true;
+	}
+	return false;
+	
+}
+
+
 void igvInterfaz::set_glutKeyboardFunc(unsigned char key, int x, int y) {
 
 	switch (key) {
 		////// Apartado C: incluir aqu� el cambio de la c�mara para mostrar las vistas planta, perfil, alzado o perspectiva 
 		////// Apartado C: incluir aqu� la modificaci�n de los grados de libertad del modelo pulsando las teclas correspondientes
-        case 'a':
-        case 'd':
         case 'w':
+			cout << "eje x" << interfaz.camara.P0[0] << endl;
+			cout << "eje y" << interfaz.camara.P0[1] << endl;
+			cout << "eje z" << interfaz.camara.P0[2] << endl;
+			cout << "--------" << endl;
+
+			if (interfaz.checkCollision() == false) {
+				
+				interfaz.camara.onKeyBoard(key, interfaz.dt);
+				interfaz.camara.aplicar();
+				interfaz.escena.setPosicionCamara(interfaz.camara.P0);
+			}
+			
+			break;
+        case 'd':
+        case 'a':
         case 's':
             interfaz.camara.onKeyBoard(key,interfaz.dt);
             interfaz.camara.aplicar();

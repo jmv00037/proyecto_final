@@ -103,6 +103,9 @@ public:
 	void set_alto_ventana(int _alto_ventana) { alto_ventana = _alto_ventana; };
 
     static void loop(int);
+
+	bool checkCollision();
+
 };
 
 #endif
